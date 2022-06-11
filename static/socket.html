@@ -1,0 +1,44 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Go WebSocket Tutorial</title>
+  </head>
+  <body>
+    <h2>Chat box</h2>
+    <form id="myForm" onsubmit="myFunction(lname.value);return false">
+      <label for="lname">message:</label><br />
+      <input type="text" id="lname" name="lname" value="" /><br /><br />
+      <input type="submit" value="send" />
+    </form>
+    <h1 id="socket-text">test</h1>
+    <script>
+      const socketText = document.getElementById('socket-text');
+
+      let socket = new WebSocket('ws://127.0.0.1:8080/ws');
+      console.log('Attempting Connection...');
+
+      function myFunction(message) {
+        document.getElementById('myForm').reset();
+        socketText.innerHTML = message;
+        console.log('running send function');
+        socket.send(message);
+      }
+
+      socket.onopen = () => {
+        console.log('Successfully Connected');
+        socket.send('Hi From the Client!');
+      };
+
+      socket.onclose = (event) => {
+        console.log('Socket Closed Connection: ', event);
+        socket.send('Client Closed!');
+      };
+
+      socket.onerror = (error) => {
+        console.log('Socket Error: ', error);
+      };
+    </script>
+  </body>
+</html>
