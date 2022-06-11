@@ -21,10 +21,15 @@
 
       function myFunction(message) {
         document.getElementById('myForm').reset();
-        socketText.innerHTML = message;
+        // socketText.innerHTML = message;
         console.log('running send function');
         socket.send(message);
       }
+
+      socket.onmessage = async (event) => {
+        console.log(event.data);
+        socketText.innerHTML = await event.data.text();
+      };
 
       socket.onopen = () => {
         console.log('Successfully Connected');

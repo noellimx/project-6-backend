@@ -8,6 +8,8 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+var users = []*websocket.Conn{}
+
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
@@ -40,6 +42,10 @@ func reader(conn *websocket.Conn) {
 		log.Println("sending from here")
 		fmt.Println("text" + string(p))
 
+		log.Println(users)
+
+		Boardcast(users, p)
+
 		if err := conn.WriteMessage(messageType, p); err != nil {
 			log.Println(err)
 			return
@@ -64,6 +70,8 @@ func wsEndpoint(w http.ResponseWriter, r *http.Request) {
 	}
 	// listen indefinitely for new messages coming
 	// through on our WebSocket connection
+	users = append(users, ws)
+
 	reader(ws)
 
 }
