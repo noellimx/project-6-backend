@@ -44,7 +44,7 @@ func main() {
 	// if err := http.ListenAndServe(":8080", nil); err != nil {
 	//     log.Fatal(err)
 	// }
-	if err := http.ListenAndServeTLS(":10443", "/Users/noellim/customkeystore/server.cert", "/Users/noellim/customkeystore/server.key", nil); err != nil {
+	if err := http.ListenAndServeTLS(":8080", "/Users/noellim/customkeystore/server.cert", "/Users/noellim/customkeystore/server.key", nil); err != nil {
 		log.Fatal(err)
 	}
 
