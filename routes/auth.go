@@ -1,13 +1,28 @@
 package routes
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/markbates/goth"
 	"github.com/markbates/goth/gothic"
 
 	"net/http"
 )
+
+func CustomGetProviderNameFromRequestWithChiFramework(r *http.Request) (string, error) {
+	fmt.Println("CustomGetProviderNameFromRequestWithChiFramework")
+	str := chi.URLParam(r, "provider")
+	fmt.Println(str)
+
+	if str == "" {
+		return "", errors.New("provider not found")
+
+	}
+
+	return str, nil
+}
 
 var routerName = "Router - HTTPAuth"
 
@@ -15,29 +30,152 @@ func HTTPAuthRouter() http.Handler {
 
 	r := chi.NewRouter()
 
-	r.HandleFunc("/{provider}", func(w http.ResponseWriter, r *http.Request) {
+	r.HandleFunc("/login/{provider}", func(w http.ResponseWriter, r *http.Request) {
 
 		fmt.Println(routerName + "/{provider}")
+		fmt.Println(gothic.Store)
+
+		s, err := r.Cookie("_gothic_session")
+
+		if err == nil {
+			fmt.Println("GothicSession" + s.Value)
+
+		}
+
+		fmt.Println(gothic.Store)
+		provider, err := goth.GetProvider("google")
+		if err != nil {
+			fmt.Println("cannot GetFromSession")
+		}
+
+		value, err := gothic.GetFromSession("google", r)
+		if err != nil {
+			fmt.Println("cannot GetFromSession")
+		}
+		fmt.Println("can GetFromSession")
+
+		fmt.Println(value)
+		sess, err := provider.UnmarshalSession(value)
+
+		sess.GetAuthURL()
+		if err != nil {
+			fmt.Println("cannot UnmarshalSession")
+		} else {
+
+			fmt.Println("can UnmarshalSession")
+
+			fmt.Println(sess)
+
+		}
+
+		sss, err := provider.FetchUser(sess)
+		_ = sss
+		if err != nil {
+			// user can be found with existing session data
+			fmt.Println("cannot fetch")
+		}
+		fmt.Println("can fetch")
 
 		fmt.Println(r.URL.Query())
-		fmt.Println(r.URL.Query().Get("provider"))
-
-		newQ := r.URL.Query()
-		newQ.Add("provider", chi.URLParam(r, "provider"))
-		r.URL.RawQuery = newQ.Encode()
-
-		fmt.Println(r.URL.Query())
-
-
-		if gothUser, err := gothic.CompleteUserAuth(w, r); err == nil {
-
-			fmt.Println("authenticated")
-			fmt.Println("id" + gothUser.UserID)
-			fmt.Println("email" + gothUser.Email)
-
+		if _, err := gothic.CompleteUserAuth(w, r); err == nil {
+			fmt.Println("existing login")
+			http.Redirect(w, r, "/", http.StatusSeeOther)
 		} else {
 			gothic.BeginAuthHandler(w, r)
 		}
+		fmt.Println(gothic.Store)
+
+	})
+
+	r.HandleFunc("/{provider}/callback", func(w http.ResponseWriter, r *http.Request) {
+
+		fmt.Println(routerName + "/{provider}/callback")
+		/////
+
+		s, err := r.Cookie("_gothic_session")
+
+		if err == nil {
+			fmt.Println("GothicSession" + s.Value)
+
+		}
+
+		fmt.Println(gothic.Store)
+		provider, err := goth.GetProvider("google")
+		if err != nil {
+			fmt.Println("cannot GetFromSession")
+		}
+
+		value, err := gothic.GetFromSession("google", r)
+		if err != nil {
+			fmt.Println("cannot GetFromSession")
+		}
+		fmt.Println("can GetFromSession")
+
+		fmt.Println(value)
+		sess, err := provider.UnmarshalSession(value)
+		if err != nil {
+			fmt.Println("cannot UnmarshalSession")
+		}
+
+		fmt.Println("can UnmarshalSession")
+
+		fmt.Println(sess)
+
+		sss, err := provider.FetchUser(sess)
+		_ = sss
+		if err == nil {
+			// user can be found with existing session data
+			fmt.Println("cannot fetch")
+		}
+		fmt.Println("can fetch")
+
+		fmt.Println(sss)
+
+		// /////
+		// user, err := gothic.CompleteUserAuth(w, r)
+
+		// gothic.CompleteUserAuth(w, r)
+
+		// if err != nil {
+		// 	fmt.Fprintln(w, r)
+		// 	return
+		// }
+
+		// fmt.Fprintf(w, user.Email)
+		fmt.Fprintf(w, "not sure if auth via callback")
+
+	})
+
+	r.HandleFunc("/logout/{provider}", func(w http.ResponseWriter, r *http.Request) {
+
+		gothic.Logout(w, r)
+		w.Header().Set("Location", "/")
+		w.WriteHeader(http.StatusTemporaryRedirect)
+	})
+
+	r.HandleFunc("/test/{provider}", func(w http.ResponseWriter, r *http.Request) {
+
+		fmt.Println(routerName + "/test/{provider}")
+		fmt.Println(gothic.Store)
+
+		fmt.Println(r.URL.Query())
+
+		user, err := gothic.CompleteUserAuth(w, r)
+
+		defer fmt.Println(gothic.Store)
+		if err != nil {
+
+			fmt.Println("Error ")
+			fmt.Println(r.URL.Query())
+			fmt.Println(r.URL.Query())
+
+			w.WriteHeader(http.StatusNonAuthoritativeInfo)
+			fmt.Fprint(w, err)
+			return
+		}
+
+		fmt.Fprintf(w, user.Email)
+
 	})
 
 	return r

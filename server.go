@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"proj6/gomoon/routes"
 
 	"github.com/go-chi/chi/v5"
@@ -13,27 +12,38 @@ import (
 	"github.com/markbates/goth/providers/google"
 
 	"github.com/markbates/goth/gothic"
+
+	"proj6/gomoon/config"
 )
+
+var configFilePath = "/Users/noellim/customkeystore/config.json"
+
+var globalConfig = config.ReadConfig(configFilePath)
 
 func newAuthSessionStore() *sessions.CookieStore {
 
-	key := "Secret-session-key" // Replace with your SESSION_SECRET or similar
-	maxAge := 86400 * 30        // 30 days
-	isProd := false             // Set to true when serving over https
+	key := globalConfig.Session.Key
+	maxAge := 60 * 60
+	isProd := false
 
 	store := sessions.NewCookieStore([]byte(key))
 	store.MaxAge(maxAge)
 	store.Options.Path = "/"
-	store.Options.HttpOnly = true // HttpOnly should always be enabled
+	store.Options.HttpOnly = false // HttpOnly should always be enabled
 	store.Options.Secure = isProd
-
+	fmt.Println(store.Options.MaxAge)
 	return store
 }
+
 func main() {
 
 	gothic.Store = newAuthSessionStore()
 
-	goth.UseProviders(google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("GOOGLE_SECRET"), "http://localhost:3000/auth/google/callback"))
+	gothic.GetProviderName = routes.CustomGetProviderNameFromRequestWithChiFramework
+
+	googleAuthCredentials := globalConfig.OAuth.Google
+	googleCallbackUrl := "https://" + globalConfig.Network.Domain + ":" + globalConfig.Network.Port + "/auth/google/callback"
+	goth.UseProviders(google.New(googleAuthCredentials.ClientId, googleAuthCredentials.ClientSecret, googleCallbackUrl))
 
 	// Routes
 
@@ -43,19 +53,25 @@ func main() {
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 
+		s, err := r.Cookie("_gothic_session")
+
+		if err == nil {
+			fmt.Println(s.Value)
+
+		}
 		fmt.Fprint(w, "Hi")
 	})
 	r.Mount("/dummy", routes.DummyRouter())
 
 	r.Mount("/auth", routes.HTTPAuthRouter())
 
-	// if err := http.ListenAndServe(":8080", nil); err != nil {
-	//     log.Fatal(err)
-	// }
+	func() {
+		fqdn := globalConfig.Network.Domain + ":" + globalConfig.Network.Port
+		fmt.Println("Server listening on " + fqdn + "...")
+		if err := http.ListenAndServeTLS(fqdn, globalConfig.Https.Paths.Certificate, globalConfig.Https.Paths.Key, r); err != nil {
+			log.Fatal(err)
+		}
 
-	fmt.Println("Listening")
-	if err := http.ListenAndServeTLS(":8080", "/Users/noellim/customkeystore/server.cert", "/Users/noellim/customkeystore/server.key", r); err != nil {
-		log.Fatal(err)
-	}
-
+	}()
+	fmt.Println("Server gracefully ended.")
 }

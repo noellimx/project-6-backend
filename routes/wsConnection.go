@@ -1,17 +1,16 @@
 package routes
 
 import (
-	"net/http"
-	"github.com/go-chi/chi/v5"
-	"log"
 	"fmt"
+	"log"
+	"net/http"
+
+	"github.com/go-chi/chi/v5"
 
 	"github.com/gorilla/websocket"
 
-    "proj6/gomoon/wss"
-
+	"proj6/gomoon/wss"
 )
-
 
 var users = []*websocket.Conn{}
 
@@ -19,6 +18,7 @@ var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
 }
+
 func reader(conn *websocket.Conn) {
 	for {
 		// read in a message
@@ -67,8 +67,8 @@ func wsEndpoint(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpGradeToWsRouter() http.Handler {
-    r := chi.NewRouter()
-    r.HandleFunc("/ws", wsEndpoint)
+	r := chi.NewRouter()
+	r.HandleFunc("/ws", wsEndpoint)
 
-    return r
+	return r
 }
