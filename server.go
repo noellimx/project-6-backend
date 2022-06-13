@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"proj6/gomoon/routes"
 
 	"github.com/go-chi/chi/v5"
@@ -16,7 +17,8 @@ import (
 	"proj6/gomoon/config"
 )
 
-var configFilePath = "/Users/noellim/customkeystore/config.json"
+var configFileParent = os.Getenv("HOME")
+var configFilePath = configFileParent + "/customkeystore/config.json"
 
 var globalConfig = config.ReadConfig(configFilePath)
 
