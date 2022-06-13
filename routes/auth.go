@@ -3,7 +3,6 @@ package routes
 import (
 	"errors"
 	"fmt"
-	"math/rand"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/markbates/goth"
@@ -26,28 +25,6 @@ func CustomGetProviderNameFromRequestWithChiFramework(r *http.Request) (string, 
 }
 
 var routerName = "Router - HTTPAuth"
-
-type User struct {
-	email    string
-	username string
-}
-
-func RandomString(n int) string {
-	var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
-
-	s := make([]rune, n)
-	for i := range s {
-		s[i] = letters[rand.Intn(len(letters))]
-	}
-	return string(s)
-}
-
-func aUser(email string, username string) *User {
-	p := &User{}
-	p.email = email
-	p.username = username
-	return p
-}
 
 func HTTPAuthRouter() http.Handler {
 

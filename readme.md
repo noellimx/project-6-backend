@@ -25,3 +25,7 @@ The json shape of global configuration can be found in package `config`
 1. Clone the repository
 2. `go install` will build a binary in `$GOPATH`
 3. `$GOPATH/gomoon` execute binary
+
+# Testing
+
+`go test -v ./...` all files.

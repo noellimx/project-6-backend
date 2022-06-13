@@ -12,7 +12,7 @@
 		// 		//...
 		// 	}
 
-		// 	user := aUser(dbuser.email, dbuser.username)
+		// 	user := AUser(dbuser.email, dbuser.username)
 
 		// }
 
