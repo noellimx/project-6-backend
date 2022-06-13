@@ -26,8 +26,9 @@ type GlobalConfig struct {
 
 	Https struct {
 		Paths struct {
-			Certificate string `json:"certificate"`
-			Key         string `json:"key"`
+			CertFileParentVar string `json:"cert_file_parent_var"`
+			Certificate       string `json:"certificate"`
+			Key               string `json:"key"`
 		} `json:"paths"`
 	}
 }

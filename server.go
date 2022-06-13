@@ -22,6 +22,12 @@ var configFilePath = configFileParent + "/customkeystore/config.json"
 
 var globalConfig = config.ReadConfig(configFilePath)
 
+var certFileParentVar = globalConfig.Https.Paths.CertFileParentVar
+var certFilePathFileParent = os.Getenv(certFileParentVar)
+
+var certificatePath = certFilePathFileParent + globalConfig.Https.Paths.Certificate
+var keyPath = certFilePathFileParent + globalConfig.Https.Paths.Key
+
 func newAuthSessionStore() *sessions.CookieStore {
 
 	key := globalConfig.Session.Key
@@ -70,7 +76,7 @@ func main() {
 	func() {
 		fqdn := globalConfig.Network.Domain + ":" + globalConfig.Network.Port
 		fmt.Println("Server listening on " + fqdn + "...")
-		if err := http.ListenAndServeTLS(fqdn, globalConfig.Https.Paths.Certificate, globalConfig.Https.Paths.Key, r); err != nil {
+		if err := http.ListenAndServeTLS(fqdn, certificatePath, keyPath, r); err != nil {
 			log.Fatal(err)
 		}
 

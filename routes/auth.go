@@ -3,6 +3,7 @@ package routes
 import (
 	"errors"
 	"fmt"
+	"math/rand"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/markbates/goth"
@@ -25,6 +26,28 @@ func CustomGetProviderNameFromRequestWithChiFramework(r *http.Request) (string, 
 }
 
 var routerName = "Router - HTTPAuth"
+
+type User struct {
+	email    string
+	username string
+}
+
+func RandomString(n int) string {
+	var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+
+	s := make([]rune, n)
+	for i := range s {
+		s[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(s)
+}
+
+func aUser(email string, username string) *User {
+	p := &User{}
+	p.email = email
+	p.username = username
+	return p
+}
 
 func HTTPAuthRouter() http.Handler {
 
@@ -90,59 +113,21 @@ func HTTPAuthRouter() http.Handler {
 	r.HandleFunc("/{provider}/callback", func(w http.ResponseWriter, r *http.Request) {
 
 		fmt.Println(routerName + "/{provider}/callback")
-		/////
 
-		s, err := r.Cookie("_gothic_session")
+		user, err := gothic.CompleteUserAuth(w, r)
 
-		if err == nil {
-			fmt.Println("GothicSession" + s.Value)
-
-		}
-
-		fmt.Println(gothic.Store)
-		provider, err := goth.GetProvider("google")
 		if err != nil {
-			fmt.Println("cannot GetFromSession")
+			fmt.Fprintln(w, err)
+			return
 		}
 
-		value, err := gothic.GetFromSession("google", r)
-		if err != nil {
-			fmt.Println("cannot GetFromSession")
-		}
-		fmt.Println("can GetFromSession")
+		fmt.Fprintf(w, user.Email)
+		fmt.Fprintf(w, "")
 
-		fmt.Println(value)
-		sess, err := provider.UnmarshalSession(value)
-		if err != nil {
-			fmt.Println("cannot UnmarshalSession")
-		}
-
-		fmt.Println("can UnmarshalSession")
-
-		fmt.Println(sess)
-
-		sss, err := provider.FetchUser(sess)
-		_ = sss
-		if err == nil {
-			// user can be found with existing session data
-			fmt.Println("cannot fetch")
-		}
-		fmt.Println("can fetch")
-
-		fmt.Println(sss)
-
-		// /////
-		// user, err := gothic.CompleteUserAuth(w, r)
-
-		// gothic.CompleteUserAuth(w, r)
-
-		// if err != nil {
-		// 	fmt.Fprintln(w, r)
-		// 	return
-		// }
-
-		// fmt.Fprintf(w, user.Email)
-		fmt.Fprintf(w, "not sure if auth via callback")
+		// option 1: login with google
+		// User: {id, email, username }
+		// when someone logins with google, check DB for the same email, if doesnt exist = new user/give random username
+		// response will include the jwt credentials as cookies for browser
 
 	})
 
