@@ -11,7 +11,7 @@ func TestMain(m *testing.M) {
 
 	rand.Seed(time.Now().UnixNano())
 
-	Init("dbmoontest")
+	Init("dbmoontest", nil)
 
 	if Db == nil {
 		log.Fatal("db is zero")

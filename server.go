@@ -95,7 +95,7 @@ func main() {
 	rand.Seed(time.Now().UnixNano())
 
 	// globalConfig.dbName
-	database.Init("gomoon")
+	database.Init("gomoon", nil)
 	defer database.Db.Close()
 
 	gothic.Store = newAuthSessionStore()

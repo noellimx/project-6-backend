@@ -7,7 +7,15 @@ import (
 	"os"
 )
 
+type PSQL struct {
+	Username     string `json:"username"`
+	DatabaseName string `json:"database_name"`
+	Host         string `json:"host"`
+	Port         string `json:"port"`
+}
+
 type GlobalConfig struct {
+	PSQL  PSQL `json:"psql"`
 	OAuth struct {
 		Google struct {
 			ClientId     string `json:"client_id"`
