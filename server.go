@@ -45,7 +45,6 @@ func main() {
 	goth.UseProviders(google.New(googleAuthCredentials.ClientId, googleAuthCredentials.ClientSecret, googleCallbackUrl))
 
 	// Routes
-
 	r := chi.NewRouter()
 
 	// Welcome Message
@@ -66,6 +65,8 @@ func main() {
 	r.Mount("/users", routes.UserRouter())
 
 	r.Mount("/auth", routes.HTTPAuthRouter())
+
+	r.Mount("/ws", routes.UpGradeToWsRouter())
 
 	func() {
 		fqdn := globalConfig.Network.Domain + ":" + globalConfig.Network.Port
