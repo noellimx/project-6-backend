@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"math/rand"
@@ -10,10 +9,10 @@ import (
 	"proj6/gomoon/config"
 	"proj6/gomoon/database"
 	"proj6/gomoon/routes"
+	"proj6/gomoon/session"
 	"time"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/gorilla/sessions"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/providers/google"
 
@@ -30,60 +29,6 @@ var certFilePathFileParent = os.Getenv(certFileParentVar)
 var certificatePath = certFilePathFileParent + globalConfig.Https.Paths.Certificate
 var keyPath = certFilePathFileParent + globalConfig.Https.Paths.Key
 
-func newAuthSessionStore() *sessions.CookieStore {
-
-	key := globalConfig.Session.Key
-	maxAge := 60 * 60
-	isProd := false
-
-	store := sessions.NewCookieStore([]byte(key))
-	store.MaxAge(maxAge)
-	store.Options.Path = "/"
-	store.Options.HttpOnly = false // HttpOnly should always be enabled
-	store.Options.Secure = isProd
-	fmt.Println(store.Options.MaxAge)
-	return store
-}
-
-func GetAllUsers(w http.ResponseWriter, r *http.Request) {
-
-	var users []database.User
-
-	allUser := database.Db.Find(&users)
-
-	json.NewEncoder(w).Encode(&allUser)
-	fmt.Printf("running within GetAllUsers function")
-	fmt.Println(allUser)
-}
-
-func GetUser(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf("running within GetUser function")
-
-	params := chi.URLParam(r, "id")
-	fmt.Println(params)
-	var users []database.User
-
-	data := database.Db.First(&users, params)
-	if len(users) == 0 {
-		fmt.Println("no user found")
-		return
-	}
-	fmt.Println(users[0].Email)
-	fmt.Println(users[0].Username)
-
-	json.NewEncoder(w).Encode(&data)
-}
-
-// func NewUser(w http.ResponseWriter, r *http.Request){
-
-// 	email := chi.URLParam(r, "email")
-// 	username := chi.URLParam(r, "username")
-
-// 	var users []User
-// 	user := db.Create(&user)
-
-// }
-
 func main() {
 
 	rand.Seed(time.Now().UnixNano())
@@ -91,7 +36,7 @@ func main() {
 	database.Init("gomoon", &globalConfig.PSQL)
 	defer database.Db.Close()
 
-	gothic.Store = newAuthSessionStore()
+	gothic.Store = session.NewAuthSessionStore(globalConfig.Session.Key)
 
 	gothic.GetProviderName = routes.CustomGetProviderNameFromRequestWithChiFramework
 
@@ -103,11 +48,7 @@ func main() {
 
 	r := chi.NewRouter()
 
-	r.Mount("/", routes.StaticRouter())
-	r.Get("/users", GetAllUsers)
-	r.Get("/users/{id}", GetUser)
-	// r.Post("/newuser/{email}/{username}", NewUser)
-
+	// Welcome Message
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 
 		s, err := r.Cookie("_gothic_session")
@@ -120,6 +61,10 @@ func main() {
 	})
 	r.Mount("/dummy", routes.DummyRouter())
 
+	r.Mount("/", routes.StaticRouter())
+
+	r.Mount("/users", routes.UserRouter())
+
 	r.Mount("/auth", routes.HTTPAuthRouter())
 
 	func() {
@@ -128,7 +73,6 @@ func main() {
 		if err := http.ListenAndServeTLS(fqdn, certificatePath, keyPath, r); err != nil {
 			log.Fatal(err)
 		}
-
 	}()
 	fmt.Println("Server gracefully ended.")
 }
