@@ -44,6 +44,7 @@ func main() {
 	googleCallbackUrl := "https://" + globalConfig.Network.Domain + ":" + globalConfig.Network.Port + "/auth/google/callback"
 	goth.UseProviders(google.New(googleAuthCredentials.ClientId, googleAuthCredentials.ClientSecret, googleCallbackUrl))
 
+	routes.JwtSecret = []byte(globalConfig.JWT.Secret)
 	// Routes
 	r := chi.NewRouter()
 

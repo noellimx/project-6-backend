@@ -7,6 +7,9 @@ import (
 	"os"
 )
 
+type JWT struct {
+	Secret string `json:"secret"`
+}
 type PSQL struct {
 	Username     string `json:"username"`
 	DatabaseName string `json:"database_name"`
@@ -15,6 +18,7 @@ type PSQL struct {
 }
 
 type GlobalConfig struct {
+	JWT   JWT  `json:"jwt"`
 	PSQL  PSQL `json:"psql"`
 	OAuth struct {
 		Google struct {

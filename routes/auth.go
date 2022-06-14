@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"proj6/gomoon/database"
+	"proj6/gomoon/utils"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/markbates/goth"
@@ -29,7 +30,8 @@ func CustomGetProviderNameFromRequestWithChiFramework(r *http.Request) (string, 
 
 var routerName = "Router - HTTPAuth"
 
-var hmacSampleSecret = []byte("asd")
+var jwtSecret = []byte(utils.RandomString(256))
+var JwtSecret = jwtSecret
 
 func HTTPAuthRouter() http.Handler {
 
@@ -109,7 +111,7 @@ func HTTPAuthRouter() http.Handler {
 			"username": dbUser.Username,
 		})
 
-		jwtStr, _ := token.SignedString(hmacSampleSecret)
+		jwtStr, _ := token.SignedString(JwtSecret)
 
 		cookie := &http.Cookie{
 			Name:  "gm-token",
