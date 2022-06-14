@@ -41,7 +41,7 @@ type GlobalConfig struct {
 	}
 }
 
-func ReadConfig(path string) GlobalConfig {
+func ReadConfig(path string) *GlobalConfig {
 	jsonFile, err := os.Open(path)
 	if err != nil {
 		log.Fatal(err)
@@ -53,5 +53,5 @@ func ReadConfig(path string) GlobalConfig {
 	globalConfig := GlobalConfig{}
 	json.Unmarshal(byteValue, &globalConfig)
 
-	return globalConfig
+	return &globalConfig
 }

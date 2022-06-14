@@ -23,12 +23,33 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
-var err error
+type Environment int
 
-var configFileParent = os.Getenv("HOME")
-var configFilePath = configFileParent + "/customkeystore/config.json"
+const (
+	Production Environment = iota
+	Test
+)
 
-var globalConfig = config.ReadConfig(configFilePath)
+func ReadConfigV2(env Environment) *config.GlobalConfig {
+
+	configFileParent := os.Getenv("HOME")
+
+	var subpath string
+
+	if env == Production {
+		subpath = "production"
+	} else if env == Test {
+		subpath = "test"
+	} else {
+		log.Fatal("Environment not supported")
+	}
+
+	configFilePath := configFileParent + "/customkeystore/" + subpath + "/config.json"
+
+	return config.ReadConfig(configFilePath)
+}
+
+var globalConfig = ReadConfigV2(Production)
 
 var certFileParentVar = globalConfig.Https.Paths.CertFileParentVar
 var certFilePathFileParent = os.Getenv(certFileParentVar)
@@ -94,8 +115,7 @@ func main() {
 
 	rand.Seed(time.Now().UnixNano())
 
-	// globalConfig.dbName
-	database.Init("gomoon", nil)
+	database.Init("gomoon", &globalConfig.PSQL)
 	defer database.Db.Close()
 
 	gothic.Store = newAuthSessionStore()

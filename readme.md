@@ -1,5 +1,7 @@
 # RTFM
 
+Each environment should have its own test and production configuration.
+
 # package name
 
 gomoon

@@ -15,7 +15,13 @@ var err error
 func Init(name string, dbConfig *config.PSQL) {
 
 	fmt.Println("Initializing database")
-	Db, err = gorm.Open("postgres", "host=127.0.0.1 port=5432 user=kaichungyeo dbname="+name+" sslmode=disable")
+
+	host := dbConfig.Host
+	port := dbConfig.Port
+	username := dbConfig.Username
+	dbName := dbConfig.DatabaseName
+
+	Db, err = gorm.Open("postgres", "host="+host+" port="+port+" user="+username+" dbname="+dbName+" sslmode=disable")
 
 	if err != nil {
 		panic("failed to connect database")
