@@ -9,7 +9,7 @@ import (
 func StaticRouter() http.Handler {
 	r := chi.NewRouter()
 	fileServer := http.FileServer(http.Dir("./static"))
-	r.Handle("/", fileServer)
+	r.Handle("/*", fileServer)
 
 	return r
 }

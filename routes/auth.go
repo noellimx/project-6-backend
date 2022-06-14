@@ -3,12 +3,15 @@ package routes
 import (
 	"errors"
 	"fmt"
+	"proj6/gomoon/database"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/gothic"
 
 	"net/http"
+
+	jwt "github.com/golang-jwt/jwt/v4"
 )
 
 func CustomGetProviderNameFromRequestWithChiFramework(r *http.Request) (string, error) {
@@ -25,6 +28,8 @@ func CustomGetProviderNameFromRequestWithChiFramework(r *http.Request) (string, 
 }
 
 var routerName = "Router - HTTPAuth"
+
+var hmacSampleSecret = []byte("asd")
 
 func HTTPAuthRouter() http.Handler {
 
@@ -98,15 +103,30 @@ func HTTPAuthRouter() http.Handler {
 			return
 		}
 
+		dbUser, _ := database.GetByEmailOrCreateUser(user.Email)
+
+		token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+			"username": dbUser.Username,
+		})
+
+		jwtStr, _ := token.SignedString(hmacSampleSecret)
+
+		cookie := &http.Cookie{
+			Name:  "gm-token",
+			Value: jwtStr,
+			Path:  "/",
+		}
+		http.SetCookie(w, cookie)
+
 		fmt.Fprintf(w, user.Email)
 		fmt.Fprintf(w, "")
 
-		// option 1: login with google
-		// User: {id, email, username }
-		// when someone logins with google, check DB for the same email, if doesnt exist = new user/give random username
-		// response will include the jwt credentials as cookies for browser
-
 	})
+
+	// option 1: login with google
+	// User: {id, email, username }
+	// when someone logins with google, check DB for the same email, if doesnt exist = new user/give random username
+	// response will include the jwt credentials as cookies for browser
 
 	r.HandleFunc("/logout/{provider}", func(w http.ResponseWriter, r *http.Request) {
 
