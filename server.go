@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
+	"proj6/gomoon/config"
 	"proj6/gomoon/database"
 	"proj6/gomoon/routes"
 	"time"
@@ -18,38 +19,10 @@ import (
 
 	"github.com/markbates/goth/gothic"
 
-	"proj6/gomoon/config"
-
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
-type Environment int
-
-const (
-	Production Environment = iota
-	Test
-)
-
-func ReadConfigV2(env Environment) *config.GlobalConfig {
-
-	configFileParent := os.Getenv("HOME")
-
-	var subpath string
-
-	if env == Production {
-		subpath = "production"
-	} else if env == Test {
-		subpath = "test"
-	} else {
-		log.Fatal("Environment not supported")
-	}
-
-	configFilePath := configFileParent + "/customkeystore/" + subpath + "/config.json"
-
-	return config.ReadConfig(configFilePath)
-}
-
-var globalConfig = ReadConfigV2(Production)
+var globalConfig = config.ReadConfig(config.Production)
 
 var certFileParentVar = globalConfig.Https.Paths.CertFileParentVar
 var certFilePathFileParent = os.Getenv(certFileParentVar)
