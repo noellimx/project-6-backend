@@ -1,10 +1,13 @@
 package database
 
-import "testing"
+import (
+	"proj6/gomoon/utils"
+	"testing"
+)
 
 func TestCreateUser(t *testing.T) {
-	testEmail := "a" + RandomString(12) + "@b.com"
-	username := "test" + RandomString(12)
+	testEmail := "a" + utils.RandomString(12) + "@b.com"
+	username := "test" + utils.RandomString(12)
 
 	CreateUser(testEmail, username)
 
@@ -19,7 +22,7 @@ func TestCreateUser(t *testing.T) {
 }
 func TestUserGetOrCreate(t *testing.T) {
 
-	testEmail := "a" + RandomString(12) + "@b.com"
+	testEmail := "a" + utils.RandomString(12) + "@b.com"
 
 	user, isNew := GetByEmailOrCreateUser(testEmail)
 	if isNew != true {

@@ -6,7 +6,7 @@
 
 		//check DB for email for exist, findOne where email === user.email
 		// if not exist, assign random username and insert into DB
-		// 	var username = user.Name + RandomString(6)
+		// 	var username = user.Name +utils.RandomString(6)
 		// 	dbuser, err := CreateUser(email, username)
 		// 	if err != nil {
 		// 		//...

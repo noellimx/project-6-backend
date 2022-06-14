@@ -48,8 +48,8 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 
 func UserRouter() http.Handler {
 	r := chi.NewRouter()
-	r.Get("/users", getAllUsers)
-	r.Get("/users/{id}", getUser)
+	r.Get("/", getAllUsers)
+	r.Get("/{id}", getUser)
 	r.Post("/newuser/{email}/{username}", newUser)
 	return r
 }

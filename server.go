@@ -49,6 +49,8 @@ func main() {
 	r := chi.NewRouter()
 
 	// Welcome Message
+	r.Mount("/", routes.StaticRouter())
+
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 
 		s, err := r.Cookie("_gothic_session")
@@ -60,8 +62,6 @@ func main() {
 		fmt.Fprint(w, "Hi")
 	})
 	r.Mount("/dummy", routes.DummyRouter())
-
-	r.Mount("/", routes.StaticRouter())
 
 	r.Mount("/users", routes.UserRouter())
 

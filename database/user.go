@@ -1,8 +1,8 @@
 package database
 
 import (
-	"math/rand"
 	"proj6/gomoon/types"
+	"proj6/gomoon/utils"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
@@ -12,16 +12,6 @@ type User struct {
 	gorm.Model
 	Email    string `gorm:"unique"`
 	Username string `gorm:"unique"`
-}
-
-var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
-
-func RandomString(n int) string {
-	var s = make([]rune, n)
-	for i := range s {
-		s[i] = letters[rand.Intn(len(letters))]
-	}
-	return string(s)
 }
 
 func AUser(email string, username string) *types.User {
@@ -39,7 +29,7 @@ func GetByEmailOrCreateUser(email string) (newOrExistingUser *User, isNew bool) 
 		return u, false
 	}
 
-	username := RandomString(12)
+	username := utils.RandomString(12)
 
 	CreateUser(email, username)
 
