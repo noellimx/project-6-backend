@@ -1,11 +1,15 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
+	"proj6/gomoon/database"
 	"proj6/gomoon/routes"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/gorilla/sessions"
@@ -15,7 +19,11 @@ import (
 	"github.com/markbates/goth/gothic"
 
 	"proj6/gomoon/config"
+
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
+
+var err error
 
 var configFileParent = os.Getenv("HOME")
 var configFilePath = configFileParent + "/customkeystore/config.json"
@@ -43,7 +51,52 @@ func newAuthSessionStore() *sessions.CookieStore {
 	return store
 }
 
+func GetAllUsers(w http.ResponseWriter, r *http.Request) {
+
+	var users []database.User
+
+	allUser := database.Db.Find(&users)
+
+	json.NewEncoder(w).Encode(&allUser)
+	fmt.Printf("running within GetAllUsers function")
+	fmt.Println(allUser)
+}
+
+func GetUser(w http.ResponseWriter, r *http.Request) {
+	fmt.Printf("running within GetUser function")
+
+	params := chi.URLParam(r, "id")
+	fmt.Println(params)
+	var users []database.User
+
+	data := database.Db.First(&users, params)
+	if len(users) == 0 {
+		fmt.Println("no user found")
+		return
+	}
+	fmt.Println(users[0].Email)
+	fmt.Println(users[0].Username)
+
+	json.NewEncoder(w).Encode(&data)
+}
+
+// func NewUser(w http.ResponseWriter, r *http.Request){
+
+// 	email := chi.URLParam(r, "email")
+// 	username := chi.URLParam(r, "username")
+
+// 	var users []User
+// 	user := db.Create(&user)
+
+// }
+
 func main() {
+
+	rand.Seed(time.Now().UnixNano())
+
+	// globalConfig.dbName
+	database.Init("gomoon")
+	defer database.Db.Close()
 
 	gothic.Store = newAuthSessionStore()
 
@@ -58,6 +111,9 @@ func main() {
 	r := chi.NewRouter()
 
 	r.Mount("/", routes.StaticRouter())
+	r.Get("/users", GetAllUsers)
+	r.Get("/users/{id}", GetUser)
+	// r.Post("/newuser/{email}/{username}", NewUser)
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 

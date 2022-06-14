@@ -4,6 +4,19 @@
 
 gomoon
 
+# Database Configuration
+
+Using postgres
+
+## database_name
+
+`gomoon` production
+`gomoontest` test
+
+## One time setup for new environment
+
+createdb <database_name>
+
 # HTTPS TLS Certificate
 
 ## Generate a self-signed certificate
@@ -29,3 +42,5 @@ The json shape of global configuration can be found in package `config`
 # Testing
 
 `go test -v ./...` all files.
+
+https://github.com/kaichung92/project-6-backend.git
