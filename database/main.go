@@ -12,7 +12,7 @@ var Db *gorm.DB
 
 var err error
 
-func Init(name string, dbConfig *config.PSQL) {
+func Init(dbConfig *config.PSQL) {
 
 	fmt.Println("Initializing database")
 

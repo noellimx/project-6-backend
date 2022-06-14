@@ -33,7 +33,7 @@ func main() {
 
 	rand.Seed(time.Now().UnixNano())
 
-	database.Init("gomoon", &globalConfig.PSQL)
+	database.Init(&globalConfig.PSQL)
 	defer database.Db.Close()
 
 	gothic.Store = session.NewAuthSessionStore(globalConfig.Session.Key)
