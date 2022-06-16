@@ -1,8 +1,23 @@
 # RTFM
 
+Each environment should have its own test and production configuration.
+
 # package name
 
 gomoon
+
+# Database Configuration
+
+Using postgres
+
+## database_name
+
+`gomoon` production
+`gomoontest` test
+
+## One time setup for new environment
+
+createdb <database_name>
 
 # HTTPS TLS Certificate
 
@@ -14,7 +29,7 @@ This certificate is for testing as it is not signed by any CA.
 
 ## Configuration
 
-Let's enforce no reading of variables from environment for now. All configurations (paths, variables etc) should be stored in a json file `config.json`. Path to this file is assigned to `$HOME/configFilePath/config.json` and will be parsed as a global configuration struct. The config is confidential and MUST NOT be commited into repository.
+Let's enforce no reading of variables from environment for now. All configurations (paths, variables etc) should be stored in a json file `config.json`. Path to this file is assigned to `$HOME/customkeystore/< "test" | "production" >/config.json` and will be parsed as a global configuration struct. The config is confidential and MUST NOT be commited into repository.
 
 The json shape of global configuration can be found in package `config`
 
@@ -26,6 +41,12 @@ The json shape of global configuration can be found in package `config`
 2. `go install` will build a binary in `$GOPATH`
 3. `$GOPATH/gomoon` execute binary
 
+# Running package main
+
+`go run .`
+
 # Testing
 
 `go test -v ./...` all files.
+
+https://github.com/kaichung92/project-6-backend.git

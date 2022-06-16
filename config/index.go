@@ -7,7 +7,19 @@ import (
 	"os"
 )
 
+type JWT struct {
+	Secret string `json:"secret"`
+}
+type PSQL struct {
+	Username     string `json:"username"`
+	DatabaseName string `json:"database_name"`
+	Host         string `json:"host"`
+	Port         string `json:"port"`
+}
+
 type GlobalConfig struct {
+	JWT   JWT  `json:"jwt"`
+	PSQL  PSQL `json:"psql"`
 	OAuth struct {
 		Google struct {
 			ClientId     string `json:"client_id"`
@@ -33,7 +45,7 @@ type GlobalConfig struct {
 	}
 }
 
-func ReadConfig(path string) GlobalConfig {
+func readConfig(path string) *GlobalConfig {
 	jsonFile, err := os.Open(path)
 	if err != nil {
 		log.Fatal(err)
@@ -45,5 +57,31 @@ func ReadConfig(path string) GlobalConfig {
 	globalConfig := GlobalConfig{}
 	json.Unmarshal(byteValue, &globalConfig)
 
-	return globalConfig
+	return &globalConfig
+}
+
+type Environment int
+
+const (
+	Production Environment = iota
+	Test
+)
+
+func ReadConfig(env Environment) *GlobalConfig {
+
+	configFileParent := os.Getenv("HOME")
+
+	var subpath string
+
+	if env == Production {
+		subpath = "production"
+	} else if env == Test {
+		subpath = "test"
+	} else {
+		log.Fatal("Environment not supported")
+	}
+
+	configFilePath := configFileParent + "/customkeystore/" + subpath + "/config.json"
+
+	return readConfig(configFilePath)
 }

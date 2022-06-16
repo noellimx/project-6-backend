@@ -3,24 +3,25 @@ package main
 import (
 	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
+	"proj6/gomoon/config"
+	"proj6/gomoon/database"
 	"proj6/gomoon/routes"
+	"proj6/gomoon/session"
+	"time"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/gorilla/sessions"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/providers/google"
 
 	"github.com/markbates/goth/gothic"
 
-	"proj6/gomoon/config"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
-var configFileParent = os.Getenv("HOME")
-var configFilePath = configFileParent + "/customkeystore/config.json"
-
-var globalConfig = config.ReadConfig(configFilePath)
+var globalConfig = config.ReadConfig(config.Production)
 
 var certFileParentVar = globalConfig.Https.Paths.CertFileParentVar
 var certFilePathFileParent = os.Getenv(certFileParentVar)
@@ -28,24 +29,14 @@ var certFilePathFileParent = os.Getenv(certFileParentVar)
 var certificatePath = certFilePathFileParent + globalConfig.Https.Paths.Certificate
 var keyPath = certFilePathFileParent + globalConfig.Https.Paths.Key
 
-func newAuthSessionStore() *sessions.CookieStore {
-
-	key := globalConfig.Session.Key
-	maxAge := 60 * 60
-	isProd := false
-
-	store := sessions.NewCookieStore([]byte(key))
-	store.MaxAge(maxAge)
-	store.Options.Path = "/"
-	store.Options.HttpOnly = false // HttpOnly should always be enabled
-	store.Options.Secure = isProd
-	fmt.Println(store.Options.MaxAge)
-	return store
-}
-
 func main() {
 
-	gothic.Store = newAuthSessionStore()
+	rand.Seed(time.Now().UnixNano())
+
+	database.Init(&globalConfig.PSQL)
+	defer database.Db.Close()
+
+	gothic.Store = session.NewAuthSessionStore(globalConfig.Session.Key)
 
 	gothic.GetProviderName = routes.CustomGetProviderNameFromRequestWithChiFramework
 
@@ -53,10 +44,11 @@ func main() {
 	googleCallbackUrl := "https://" + globalConfig.Network.Domain + ":" + globalConfig.Network.Port + "/auth/google/callback"
 	goth.UseProviders(google.New(googleAuthCredentials.ClientId, googleAuthCredentials.ClientSecret, googleCallbackUrl))
 
+	routes.JwtSecret = []byte(globalConfig.JWT.Secret)
 	// Routes
-
 	r := chi.NewRouter()
 
+	// Welcome Message
 	r.Mount("/", routes.StaticRouter())
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
@@ -71,7 +63,11 @@ func main() {
 	})
 	r.Mount("/dummy", routes.DummyRouter())
 
+	r.Mount("/users", routes.UserRouter())
+
 	r.Mount("/auth", routes.HTTPAuthRouter())
+
+	r.Mount("/ws", routes.UpGradeToWsRouter())
 
 	func() {
 		fqdn := globalConfig.Network.Domain + ":" + globalConfig.Network.Port
@@ -79,7 +75,6 @@ func main() {
 		if err := http.ListenAndServeTLS(fqdn, certificatePath, keyPath, r); err != nil {
 			log.Fatal(err)
 		}
-
 	}()
 	fmt.Println("Server gracefully ended.")
 }

@@ -44,6 +44,8 @@ func reader(conn *websocket.Conn) {
 }
 
 func wsEndpoint(w http.ResponseWriter, r *http.Request) {
+
+	fmt.Println("wsEndpoint")
 	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 
 	// upgrade this connection to a WebSocket
@@ -68,7 +70,7 @@ func wsEndpoint(w http.ResponseWriter, r *http.Request) {
 
 func UpGradeToWsRouter() http.Handler {
 	r := chi.NewRouter()
-	r.HandleFunc("/ws", wsEndpoint)
+	r.HandleFunc("/", wsEndpoint)
 
 	return r
 }
