@@ -26,8 +26,25 @@ var globalConfig = config.ReadConfig(config.Production)
 var certFileParentVar = globalConfig.Https.Paths.CertFileParentVar
 var certFilePathFileParent = os.Getenv(certFileParentVar)
 
-var certificatePath = certFilePathFileParent + globalConfig.Https.Paths.Certificate
-var keyPath = certFilePathFileParent + globalConfig.Https.Paths.Key
+func EnvSubPath(env config.Environment) string {
+	var subpath string
+
+	if env == config.Production {
+		subpath = "production"
+	} else if env == config.Test {
+		subpath = "test"
+	} else {
+		log.Fatal("Environment not supported")
+	}
+
+	return subpath
+
+}
+
+var envSubPath = "/" + EnvSubPath(config.Production)
+
+var certificatePath = certFilePathFileParent + "/customkeystore/" + envSubPath + globalConfig.Https.Paths.Certificate
+var keyPath = certFilePathFileParent + "/customkeystore/" + envSubPath + globalConfig.Https.Paths.Key
 
 func main() {
 
