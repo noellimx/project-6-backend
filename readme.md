@@ -25,7 +25,7 @@ createdb <database_name>
 
 `openssl req -nodes -x509 -newkey rsa:4096 -keyout server.key -out server.cert -sha256 -days 365`
 
-This certificate is for testing as it is not signed by any CA.
+This certificate is fit for testing only as it is not signed by any CA.
 
 ## Configuration
 
