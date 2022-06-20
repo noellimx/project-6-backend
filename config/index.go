@@ -2,6 +2,7 @@ package config
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -82,6 +83,6 @@ func ReadConfig(env Environment) *GlobalConfig {
 	}
 
 	configFilePath := configFileParent + "/customkeystore/" + subpath + "/config.json"
-
+	fmt.Println(`config file path: ` + configFilePath)
 	return readConfig(configFilePath)
 }
