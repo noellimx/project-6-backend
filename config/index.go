@@ -2,6 +2,7 @@ package config
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -48,7 +49,7 @@ type GlobalConfig struct {
 func readConfig(path string) *GlobalConfig {
 	jsonFile, err := os.Open(path)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Error Reading Config from path. " + err.Error())
 	}
 	byteValue, err := ioutil.ReadAll(jsonFile)
 	if err != nil {
@@ -82,6 +83,6 @@ func ReadConfig(env Environment) *GlobalConfig {
 	}
 
 	configFilePath := configFileParent + "/customkeystore/" + subpath + "/config.json"
-
+	fmt.Println(`config file path: ` + configFilePath)
 	return readConfig(configFilePath)
 }

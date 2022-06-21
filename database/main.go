@@ -24,7 +24,7 @@ func Init(dbConfig *config.PSQL) {
 	Db, err = gorm.Open("postgres", "host="+host+" port="+port+" user="+username+" dbname="+dbName+" sslmode=disable")
 
 	if err != nil {
-		panic("failed to connect database")
+		panic("failed to connect database with configuration: " + "host=" + host + " port=" + port + " user=" + username + " dbname=" + dbName + " sslmode=disable")
 	}
 
 	Db.AutoMigrate(&User{})

@@ -1,9 +1,11 @@
 package routes
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 
@@ -12,14 +14,52 @@ import (
 	"proj6/gomoon/wss"
 )
 
-var users = []*websocket.Conn{}
+var connections = []*websocket.Conn{}
 
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
 }
 
-func reader(conn *websocket.Conn) {
+func StoreMessageInTickerRoom(result *map[string]interface{}) {
+
+	token := (*result)["token"]
+	_ = token
+	// from token need to get username
+
+	message := (*result)["message"]
+	_ = message
+
+	roomId := (*result)["roomId"]
+	_ = roomId
+
+	t := time.Now()
+	_ = t
+
+	// Store the result
+
+	// And broadcase message to room
+}
+func ManageEvents(conn *websocket.Conn, p []byte) {
+
+	var result map[string]interface{}
+
+	json.Unmarshal(p, &result)
+
+	event := result["event"].(string)
+
+	fmt.Println(event + "event: ")
+
+	if event == "send-to-ticker-room" {
+
+		StoreMessageInTickerRoom(&result)
+	}
+
+}
+
+// listen indefinitely for new messages coming
+// through on our WebSocket connection
+func listenToWsConnection(conn *websocket.Conn) {
 	for {
 		// read in a message
 		messageType, p, err := conn.ReadMessage()
@@ -29,12 +69,14 @@ func reader(conn *websocket.Conn) {
 		}
 
 		// print out that message for clarity
-		log.Println("sending from here")
+		log.Println("[listenToWsConnection]")
 		fmt.Println("text" + string(p))
 
-		log.Println(users)
+		wss.Broadcast(connections, p)
 
-		wss.Boardcast(users, p)
+		// TODO try catch
+
+		ManageEvents(conn, p)
 
 		if err := conn.WriteMessage(messageType, p); err != nil {
 			log.Println(err)
@@ -60,11 +102,10 @@ func wsEndpoint(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(err)
 	}
-	// listen indefinitely for new messages coming
-	// through on our WebSocket connection
-	users = append(users, ws)
 
-	reader(ws)
+	connections = append(connections, ws)
+
+	listenToWsConnection(ws)
 
 }
 
