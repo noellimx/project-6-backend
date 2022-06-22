@@ -1,6 +1,11 @@
 name: EC2 Deployment
 on: [push, pull_request]
 
+
+env:
+  ## Sets environment variable
+  DB_NAME: "${{secrets.PSQL_DATABASENAME}}"     
+
 jobs:
   test:
     strategy:
@@ -17,8 +22,8 @@ jobs:
           env:
           #   POSTGRES_PASSWORD: postgres
 
-            POSTGRES_DB: "${{secrets.PSQL_DATABASENAME}}"        
-            POSTGRES_USER: "${{secrets.psql_username}}"
+            POSTGRES_DB: ${{env.DB_NAME}}
+            POSTGRES_USER: postgres
 
           # Set health checks to wait until postgres has started
           options: >-
@@ -83,6 +88,6 @@ jobs:
         # run: |
         #   subpath="/customkeystore/test"
         #   echo "${{ secrets.MYCONFIG }}" | sudo tee "$${{secrets.https_paths_certFileParentVar}}${subpath}/config.json"
-        #   cat "$${{secrets.https_paths_certFileParentVar}}${subpath}/config.json"
+          cat "$${{secrets.https_paths_certFileParentVar}}${subpath}/config.json"
       - name: run pre commit hook
         run: ./githooks/pre-commit
