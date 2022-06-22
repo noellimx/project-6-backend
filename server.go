@@ -21,11 +21,6 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
-var globalConfig = config.ReadConfig(config.Production)
-
-var certFileParentVar = globalConfig.Https.Paths.CertFileParentVar
-var certFilePathFileParent = os.Getenv(certFileParentVar)
-
 func EnvSubPath(env config.Environment) string {
 	var subpath string
 
@@ -41,18 +36,16 @@ func EnvSubPath(env config.Environment) string {
 
 }
 
-var envSubPath = "/" + EnvSubPath(config.Production)
-var certificatePath = certFilePathFileParent + "/customkeystore" + envSubPath + globalConfig.Https.Paths.Certificate
-var keyPath = certFilePathFileParent + "/customkeystore" + envSubPath + globalConfig.Https.Paths.Key
-
 func main() {
 
-	// type Message struct {
-	// 	gorm.Model
-	// 	message string
-	// 	roomId  int
-	// 	time    time.Time
-	// }
+	var globalConfig = config.ReadConfig(config.Production)
+
+	var certFileParentVar = globalConfig.Https.Paths.CertFileParentVar
+	var certFilePathFileParent = os.Getenv(certFileParentVar)
+
+	var envSubPath = "/" + EnvSubPath(config.Production)
+	var certificatePath = certFilePathFileParent + "/customkeystore" + envSubPath + globalConfig.Https.Paths.Certificate
+	var keyPath = certFilePathFileParent + "/customkeystore" + envSubPath + globalConfig.Https.Paths.Key
 
 	rand.Seed(time.Now().UnixNano())
 
