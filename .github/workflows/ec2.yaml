@@ -4,7 +4,7 @@ on: [push, pull_request]
 env: 
   PGPW : ${{secrets.PSQL_PASSWORD}}
   PGDB : ${{secrets.PSQL_DATABASENAME}}
-  PGUN :  ${{secrets.PSQL_PGUN}}
+  PGUN :  ${{secrets.PSQL_USERNAME}}
 
 jobs:
   test:
