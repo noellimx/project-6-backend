@@ -89,10 +89,9 @@ jobs:
       - name: run pre commit hook
         run: ./githooks/pre-commit
       - name: bundle go
+        # the path to the binary should be $GOPATH/bin, we will explicitly point to $HOME/go/bin in case the env path is not set.
         run: |
           echo $GOPATH
           go install
-          ls $GOPATH/bin
-          echo "---"
-          pwd
           ls $HOME/go/bin
+          ls $HOME/go/bin/gomoon

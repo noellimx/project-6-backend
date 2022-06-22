@@ -1,27 +1,22 @@
-
 # Development
 
 # RTFM
 
 Each environment should have its own test and production configuration.
 
-
-
 # package name
 
 gomoon
-
 
 # githooks
 
 git hooks are found in ./githooks.
 
 ## Example
+
 plug hook on development environment
 
-```cp ./githooks/pre-commit .git/hooks/pre-commit```
-
-
+`cp ./githooks/pre-commit .git/hooks/pre-commit`
 
 ## Github Action - Towards Deployment
 
@@ -31,10 +26,9 @@ set secret variables for the gh environment via github repo settings. workflow w
 
 ## mapping of names from config.json to github secrets
 
+config.json key : Nesting = ".", Multi-word seperator: "\_", case: sensitive
 
-config.json key : Nesting = ".", Multi-word seperator: "_", case: sensitive
-
-=> github secret name : Nesting = "_", Multi-word seperator: "", case: all uppercase
+=> github secret name : Nesting = "\_", Multi-word seperator: "", case: all uppercase
 
 Example: config.db.my_secret => CONFIG_MYSECRET
 
@@ -43,7 +37,6 @@ Please note json keys are case-sensitive but github secret is case-insensitive
 # Database Configuration
 
 Using postgres with go/gorm. Using AutoMigration, that is a new development environment can start with a connection to an empty database.
-
 
 ## database_name
 
@@ -74,7 +67,7 @@ The json shape of global configuration can be found in package `config`
 
 1. Clone the repository
 2. `go install` will build a binary in `$GOPATH`
-3. `$GOPATH/gomoon` execute binary
+3. `$GOPATH/bin/gomoon` execute binary
 
 # Running package main
 
