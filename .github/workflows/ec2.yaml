@@ -48,7 +48,7 @@ jobs:
       "username":  "postgres", 
       "database_name" : "postgres",
       "host":  "localhost",  
-      "password":  "password",  
+      "password":  "postgres",  
       "port":  "${{secrets.psql_port}}" 
     },
     "oAuth" : {
