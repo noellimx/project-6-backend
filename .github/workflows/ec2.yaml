@@ -16,10 +16,15 @@ jobs:
           go-version: ${{ matrix.go-version }}
       - uses: actions/checkout@v3
       - name: Prepare configuration from Github Secrets
-        run: |
-          subpath="/customkeystore/test"
-          sudo mkdir -p "$${{secrets.https_paths_certFileParentVar}}${subpath}"
-          echo "${{ secrets.MYCONFIG }}" | sudo tee "$${{secrets.https_paths_certFileParentVar}}${subpath}/config.json"
-          cat "$${{secrets.https_paths_certFileParentVar}}${subpath}/config.json"
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "credentials.json"
+          json: ${{ secrets.MYCONFIG }}
+          dir: "$${{secrets.https_paths_certFileParentVar}}${subpath}/config.json"
+        # run: |
+        #   subpath="/customkeystore/test"
+        #   sudo mkdir -p "$${{secrets.https_paths_certFileParentVar}}${subpath}"
+        #   echo "${{ secrets.MYCONFIG }}" | sudo tee "$${{secrets.https_paths_certFileParentVar}}${subpath}/config.json"
+        #   cat "$${{secrets.https_paths_certFileParentVar}}${subpath}/config.json"
       - name: run pre commit hook
         run: ./githooks/pre-commit
