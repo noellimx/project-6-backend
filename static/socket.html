@@ -28,6 +28,7 @@
 
       socket.onmessage = async (event) => {
         console.log(event.data);
+        console.log('in onmessage');
         socketText.innerHTML = await event.data.text();
       };
 

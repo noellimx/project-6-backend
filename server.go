@@ -42,11 +42,17 @@ func EnvSubPath(env config.Environment) string {
 }
 
 var envSubPath = "/" + EnvSubPath(config.Production)
-
-var certificatePath = certFilePathFileParent + "/customkeystore/" + envSubPath + globalConfig.Https.Paths.Certificate
-var keyPath = certFilePathFileParent + "/customkeystore/" + envSubPath + globalConfig.Https.Paths.Key
+var certificatePath = certFilePathFileParent + "/customkeystore" + envSubPath + globalConfig.Https.Paths.Certificate
+var keyPath = certFilePathFileParent + "/customkeystore" + envSubPath + globalConfig.Https.Paths.Key
 
 func main() {
+
+	// type Message struct {
+	// 	gorm.Model
+	// 	message string
+	// 	roomId  int
+	// 	time    time.Time
+	// }
 
 	rand.Seed(time.Now().UnixNano())
 

@@ -9,8 +9,10 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
+	jwt "github.com/golang-jwt/jwt/v4"
 	"github.com/gorilla/websocket"
 
+	"proj6/gomoon/database"
 	"proj6/gomoon/wss"
 )
 
@@ -22,23 +24,44 @@ var upgrader = websocket.Upgrader{
 }
 
 func StoreMessageInTickerRoom(result *map[string]interface{}) {
+	thisResult := *result
+	tokenString := (thisResult)["token"]
 
-	token := (*result)["token"]
-	_ = token
+	ddd := tokenString.(string)
+
+	claims := jwt.MapClaims{}
+	_, err := jwt.ParseWithClaims(ddd, claims, func(token *jwt.Token) (interface{}, error) {
+		return []byte(JwtSecret), nil
+	})
+
+	username := claims["username"]
+	// ... error handling
+
+	if err != nil {
+		return
+	}
+
+	// do something with decoded claims
+	for key, val := range claims {
+		fmt.Printf("Key: %v, value: %v\n", key, val)
+	}
+
 	// from token need to get username
 
-	message := (*result)["message"]
+	message := (thisResult)["message"]
 	_ = message
 
-	roomId := (*result)["roomId"]
-	_ = roomId
-
+	roomId := (thisResult)["roomId"]
+	ticker := roomId
 	t := time.Now()
 	_ = t
 
 	// Store the result
 
+	database.AddToMessage(ticker.(string), message.(string), username.(string), t)
+
 	// And broadcase message to room
+
 }
 func ManageEvents(conn *websocket.Conn, p []byte) {
 
@@ -53,6 +76,9 @@ func ManageEvents(conn *websocket.Conn, p []byte) {
 	if event == "send-to-ticker-room" {
 
 		StoreMessageInTickerRoom(&result)
+
+		// get the result
+		// broadcast to people who are online to this ticker room
 	}
 
 }
@@ -76,7 +102,7 @@ func listenToWsConnection(conn *websocket.Conn) {
 
 		// TODO try catch
 
-		ManageEvents(conn, p)
+		// ManageEvents(conn, p)
 
 		if err := conn.WriteMessage(messageType, p); err != nil {
 			log.Println(err)
