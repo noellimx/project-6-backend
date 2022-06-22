@@ -20,10 +20,12 @@ jobs:
         with:
           name: "credentials.json"
           json: ${{ secrets.MYCONFIG }}
-          dir: "$${{secrets.https_paths_certFileParentVar}}${subpath}/config.json"
+          run: |
+            subpath="/customkeystore/test"
+            sudo mkdir -p "$${{secrets.https_paths_certFileParentVar}}${subpath}"
+            sudo cp credentials.json "$${{secrets.https_paths_certFileParentVar}}${subpath}/config.json"
         # run: |
         #   subpath="/customkeystore/test"
-        #   sudo mkdir -p "$${{secrets.https_paths_certFileParentVar}}${subpath}"
         #   echo "${{ secrets.MYCONFIG }}" | sudo tee "$${{secrets.https_paths_certFileParentVar}}${subpath}/config.json"
         #   cat "$${{secrets.https_paths_certFileParentVar}}${subpath}/config.json"
       - name: run pre commit hook
