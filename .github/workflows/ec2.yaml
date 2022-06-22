@@ -1,7 +1,8 @@
 name: EC2 Deployment
 on: [push, pull_request]
 
-
+env: 
+  PGPW : ${{secret.PSQL_PASSWORD}}
 
 
 jobs:
