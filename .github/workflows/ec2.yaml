@@ -14,8 +14,12 @@ jobs:
           # Docker Hub image
           image: postgres
           # Provide the password for postgres
-          env:
-            POSTGRES_PASSWORD: postgres
+          # env:
+          #   POSTGRES_PASSWORD: postgres
+
+            POSTGRES_DB: ${{secrets.PSQL_DATABASENAME}}        
+            POSTGRES_USER: ${{secrets.psql_username}}
+
           # Set health checks to wait until postgres has started
           options: >-
             --health-cmd pg_isready
@@ -24,7 +28,7 @@ jobs:
             --health-retries 5
           ports:
             # Maps tcp port 5432 on service container to the host
-            - 5432:5432
+            - ${{secrets.psql_port}}:5432
     steps:
       - uses: actions/setup-go@v3
         with:
