@@ -79,11 +79,11 @@ jobs:
   }
 '
 
-      - name: Copy to intended location, which is the final path derived from config.json and determined by the server.
+      - name: Copy to intended location, see readme.
         run: |
           subpath="/customkeystore/test"
-          sudo mkdir -p "$${{secrets.https_paths_certFileParentVar}}${subpath}"
-          sudo cp credentials.json "$${{secrets.https_paths_certFileParentVar}}${subpath}/config.json"
-          cat "$${{secrets.https_paths_certFileParentVar}}${subpath}/config.json"
+          sudo mkdir -p "$HOME${subpath}"
+          sudo cp credentials.json "$HOME${subpath}/config.json"
+          cat "$HOME${subpath}/config.json"
       - name: run pre commit hook
         run: ./githooks/pre-commit
