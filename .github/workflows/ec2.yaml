@@ -18,7 +18,7 @@ jobs:
       - name: Prepare configuration from Github Secrets
         run: |
           subpath="/customkeystore/test"
-          sudo mkdir -p $subpath
+          sudo mkdir -p "$${{secrets.https_paths_certFileParentVar}}${subpath}"
           echo "${{ secrets.MYCONFIG }}" > "$${{secrets.https_paths_certFileParentVar}}${subpath}/config.json"
       - name: run pre commit hook
         run: ./githooks/pre-commit
