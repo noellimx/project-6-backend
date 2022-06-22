@@ -47,10 +47,10 @@ jobs:
       "secret" : "${{secrets.jwt_secret}}"
     },
     "psql" : {
-      "username":  "${{secrets.psql_username}}", 
-      "database_name" : "${{secrets.psql_DATABASENAME}}",
+      "username":  "${{env.PGUN}}", 
+      "database_name" : "${{env.PGDB}}",
       "host":  "${{secrets.psql_HOST}}",  
-      "password":   "${{secrets.psql_password}}",  
+      "password":   "${{env.PGPW}}",  
       "port":  "${{secrets.psql_port}}" 
     },
     "oAuth" : {
