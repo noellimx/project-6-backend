@@ -12,7 +12,7 @@ jobs:
         with:
           postgresql version: '11'
       - name: Create database
-          run: createdb ${{secrets.PSQL_DATABASENAME}}
+        run: createdb ${{secrets.PSQL_DATABASENAME}}
       - uses: actions/setup-go@v3
         with:
           go-version: ${{ matrix.go-version }}
