@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"reflect"
 	"time"
 
 	"github.com/go-chi/chi/v5"
@@ -66,6 +67,14 @@ func StoreMessageInTickerRoom(result *map[string]interface{}) {
 	// And broadcase message to room
 }
 
+func ChatHistory(result *map[string]interface{}) {
+	thisResult := *result
+	roomId := (thisResult)["roomId"]
+	ticker := roomId
+	fmt.Println("chatHistory func, ticker", ticker)
+
+}
+
 // listen indefinitely for new messages coming
 // through on our WebSocket connection
 func listenToWsConnection(conn *websocket.Conn) {
@@ -92,9 +101,7 @@ func listenToWsConnection(conn *websocket.Conn) {
 			// get the result
 			// broadcast to people who are online to this ticker room
 		}
-		fmt.Println("value of P", p)
-		s := string(p)
-		fmt.Println(s)
+
 		wss.Broadcast(connections, p)
 
 		// TODO try catch
@@ -121,10 +128,18 @@ func wsEndpoint(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Client Connected")
+
 	err = ws.WriteMessage(1, []byte("Hi Client!"))
 	if err != nil {
 		log.Println(err)
 	}
+
+	data := database.FindMessagesInDB()
+	fmt.Println(data)
+	dataType := reflect.TypeOf(data)
+	fmt.Println(dataType)
+
+	// wss.Broadcast(connections, p)
 
 	connections = append(connections, ws)
 

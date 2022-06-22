@@ -55,3 +55,17 @@ func FindMessagesByTicker(ticker string) *[]Message {
 	return &messages
 
 }
+
+func FindMessagesInDB() *[]Message {
+
+	var messages []Message
+
+	Db.Limit(10).Find(&messages)
+
+	// result := Db.Where(tickerMessage).Find(&message)
+
+	// Db.Find(&message, Message{RoomTicker: ticker})
+
+	return &messages
+
+}
