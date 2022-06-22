@@ -49,6 +49,7 @@ jobs:
       "username":  "${{secrets.psql_username}}", 
       "database_name" :  "${{secrets.PSQL_DATABASENAME}}",
       "host":  "${{secrets.psql_host}}",  
+      "password":  "${{secrets.psql_password}}",  
       "port":  "${{secrets.psql_port}}" 
     },
     "oAuth" : {
