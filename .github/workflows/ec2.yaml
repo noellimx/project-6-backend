@@ -81,9 +81,9 @@ jobs:
 
       - name: Copy to intended location, see readme.
         run: |
-          subpath="/customkeystore/test"
-          sudo mkdir -p "$HOME${subpath}"
-          sudo cp credentials.json "$HOME${subpath}/config.json"
-          cat "$HOME${subpath}/config.json"
+          configpath="$HOME/customkeystore/test"
+          sudo mkdir -p "${configpath}"
+          sudo cp credentials.json "${configpath}/config.json"
+          cat "${configpath}/config.json"
       - name: run pre commit hook
         run: ./githooks/pre-commit
