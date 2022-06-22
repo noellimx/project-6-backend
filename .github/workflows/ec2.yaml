@@ -95,3 +95,4 @@ jobs:
           ls $GOPATH/bin
           echo "---"
           pwd
+          ls $HOME/go/bin
