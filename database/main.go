@@ -34,6 +34,13 @@ func Init(dbConfig *config.PSQL) {
 	dbName := dbConfig.DatabaseName
 	password := dbConfig.Password
 
+	if password == "" {
+		fmt.Println("Info: No password is supplied for the database.")
+	} else {
+		fmt.Println("Info: Password is supplied to the database")
+
+	}
+
 	Db, err = gorm.Open("postgres", "host="+host+" port="+port+" user="+username+" password="+password+" dbname="+dbName+" sslmode=disable")
 
 	if err != nil {
