@@ -6,6 +6,12 @@
 Each environment should have its own test and production configuration.
 
 
+
+# package name
+
+gomoon
+
+
 # githooks
 
 git hooks are found in ./githooks.
@@ -16,13 +22,12 @@ plug hook on development environment
 ```cp ./githooks/pre-commit .git/hooks/pre-commit```
 
 
-# package name
 
-gomoon
+
 
 # Database Configuration
 
-Using postgres
+Using postgres with go/gorm. Using AutoMigration, that is a new development environment can start with a connection to an empty database.
 
 
 ## database_name
@@ -44,7 +49,7 @@ This certificate is fit for testing only as it is not signed by any CA.
 
 ## Configuration
 
-Let's enforce no reading of variables from environment for now. All configurations (paths, variables etc) should be stored in a json file `config.json`. Path to this file is assigned to `$HOME/customkeystore/< "test" | "production" >/config.json` and will be parsed as a global configuration struct. The config is confidential and MUST NOT be commited into repository.
+No reading of variables from environment for now. All configurations (paths, variables etc) should be stored in a json file `config.json`. Path to this file is `$HOME/customkeystore/< "test" | "production" >/config.json` and will be parsed as a global configuration in the program. The config is confidential and MUST NOT be commited into repository.
 
 The json shape of global configuration can be found in package `config`
 
