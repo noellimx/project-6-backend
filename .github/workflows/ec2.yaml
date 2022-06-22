@@ -16,9 +16,9 @@ jobs:
           go-version: ${{ matrix.go-version }}
       - uses: actions/checkout@v3
       - name: Prepare configuration from Github Secrets
-        run: 
-          subpath="/customkeystore/test" |
-          mkdir -p $subpath |
+        run: |
+          subpath="/customkeystore/test"
+          mkdir -p subpath |
           echo "${{ secrets.MYCONFIG }}" > "$${{secrets.https_paths_certFileParentVar}}${subpath}/config.json"
       - name: run pre commit hook
         run: ./githooks/pre-commit
