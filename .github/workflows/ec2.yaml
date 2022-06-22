@@ -96,4 +96,5 @@ jobs:
           go install
           ls $HOME/go/bin
           ls $HOME/go/bin/gomoon
-      - name: Load binary into ec2
+
+        
