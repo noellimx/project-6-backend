@@ -19,7 +19,44 @@ jobs:
         uses: jsdaniell/create-json@1.1.2
         with:
           name: "credentials.json"
-          json: ${{ secrets.MYCONFIG }}
+          json: ''{
+    "jwt" : {
+      "secret" : "${{secrets.jwt_secret}}"
+    },
+    "psql" : {
+      "username":  "${{secrets.psql_username}}", 
+      "database_name" :  "${{secrets.PSQL_DATABASENAME}}",
+      "host":  "${{secrets.psql_host}}",  
+      "port":  "${{secrets.psql_port}}" 
+    },
+    "oAuth" : {
+      "google": {
+          "client_id":  "${{secrets.oAuth_google_clientId}}",
+          "client_secret":  "${{secrets.oAuth_google_clientSecret}}",
+          "project_id":  "${{secrets.oAuth_google_projectId}}",
+          "auth_uri":  "${{secrets.oAuth_google_authUri}}",
+          "token_uri":  "${{secrets.oAuth_google_tokenUri}}",
+          "auth_provider_x509_cert_url":  "${{secrets.oAuth_google_authProviderX509CertUrl}}"
+        }
+    },
+    "network": {
+      "domain":  "${{secrets.network_domain}}", 
+      "port":  "${{secrets.network_port}}"
+    },
+    "session": { 
+      "key":  "${{secrets.session_key}}"
+    },
+    "https": {
+      "paths": {
+        "cert_file_parent_var":  "${{secrets.https_paths_certFileParentVar}}", 
+        "certificate":  "${{secrets.https_paths_certificate}}",
+        "key":  "${{secrets.https_paths_key}}"
+      }
+    }
+  }
+'
+'
+      - name: Copy to intended
         run: |
           subpath="/customkeystore/test"
           sudo mkdir -p "$${{secrets.https_paths_certFileParentVar}}${subpath}"
