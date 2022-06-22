@@ -79,7 +79,7 @@ jobs:
   }
 '
 
-      - name: Copy to intended location, see readme.
+      - name: Copy Configuration to intended location, see readme.
         run: |
           configpath="$HOME/customkeystore/test"
           sudo mkdir -p "${configpath}"
