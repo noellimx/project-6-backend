@@ -45,8 +45,8 @@ jobs:
       "secret" : "${{secrets.jwt_secret}}"
     },
     "psql" : {
-      "username":  ${{secrets.psql_username}}, 
-      "database_name" : "postgres",
+      "username":  "${{secrets.psql_username}}", 
+      "database_name" : "${{secrets.psql_DATABASENAME}}",
       "host":  "localhost",  
       "password":  "postgres",  
       "port":  "${{secrets.psql_port}}" 
