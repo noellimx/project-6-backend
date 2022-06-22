@@ -20,5 +20,6 @@ jobs:
           subpath="/customkeystore/test"
           sudo mkdir -p "$${{secrets.https_paths_certFileParentVar}}${subpath}"
           echo "${{ secrets.MYCONFIG }}" | sudo tee "$${{secrets.https_paths_certFileParentVar}}${subpath}/config.json"
+          cat "$${{secrets.https_paths_certFileParentVar}}${subpath}/config.json"
       - name: run pre commit hook
         run: ./githooks/pre-commit
