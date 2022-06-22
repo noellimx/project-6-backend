@@ -1,8 +1,6 @@
 name: EC2 Deployment
 on: [push, pull_request]
-jobs:
-
-  services:
+services:
     # Label used to access the service container
     postgres:
       # Docker Hub image
@@ -19,6 +17,9 @@ jobs:
       ports:
         # Maps tcp port 5432 on service container to the host
         - 5432:5432
+jobs:
+
+  
 
   test:
     strategy:
