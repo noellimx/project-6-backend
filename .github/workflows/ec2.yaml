@@ -19,7 +19,7 @@ jobs:
         uses: jsdaniell/create-json@1.1.2
         with:
           name: "credentials.json"
-          json: ''{
+          json: '{
     "jwt" : {
       "secret" : "${{secrets.jwt_secret}}"
     },
@@ -55,7 +55,7 @@ jobs:
     }
   }
 '
-'
+
       - name: Copy to intended
         run: |
           subpath="/customkeystore/test"
