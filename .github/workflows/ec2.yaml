@@ -92,3 +92,4 @@ jobs:
         run: |
           echo $GOPATH
           go install
+          ls $GOPATH
