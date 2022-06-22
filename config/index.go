@@ -16,6 +16,7 @@ type PSQL struct {
 	DatabaseName string `json:"database_name"`
 	Host         string `json:"host"`
 	Port         string `json:"port"`
+	Password     string `json:"password"`
 }
 
 type GlobalConfig struct {

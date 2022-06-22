@@ -32,8 +32,9 @@ func Init(dbConfig *config.PSQL) {
 	port := dbConfig.Port
 	username := dbConfig.Username
 	dbName := dbConfig.DatabaseName
+	password := dbConfig.Password
 
-	Db, err = gorm.Open("postgres", "host="+host+" port="+port+" user="+username+" dbname="+dbName+" sslmode=disable")
+	Db, err = gorm.Open("postgres", "host="+host+" port="+port+" user="+username+" password="+password+" dbname="+dbName+" sslmode=disable")
 
 	if err != nil {
 		panic("failed to connect database with configuration: " + "host=" + host + " port=" + port + " user=" + username + " dbname=" + dbName + " sslmode=disable")
