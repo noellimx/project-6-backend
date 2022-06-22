@@ -37,7 +37,7 @@ func Init(dbConfig *config.PSQL) {
 	if password == "" {
 		fmt.Println("Info: No password is supplied for the database.")
 	} else {
-		fmt.Println("Info: Password is supplied to the database" + password)
+		fmt.Println("Info: Password is supplied to the database")
 
 	}
 
