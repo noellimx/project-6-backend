@@ -1,0 +1,21 @@
+		// email := user.Email
+
+		// getOrCreate user by email
+
+		// GetOrCreate := func (email string) User {
+
+		//check DB for email for exist, findOne where email === user.email
+		// if not exist, assign random username and insert into DB
+		// 	var username = user.Name +utils.RandomString(6)
+		// 	dbuser, err := CreateUser(email, username)
+		// 	if err != nil {
+		// 		//...
+		// 	}
+
+		// 	user := AUser(dbuser.email, dbuser.username)
+
+		// }
+
+		// _ = user_
+
+		// if createOrGet user_
