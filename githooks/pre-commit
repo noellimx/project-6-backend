@@ -1,16 +1,29 @@
 #!/bin/sh
 
-ping fruitt.art
+
+echo "In pre-commit-hook"
+test_fmt() {
+
+    echo "checking if all go files are formatted"
+    hash gofmt 2>&- || { echo >&2 "gofmt not in PATH."; exit 1; }
 
 
-if git rev-parse --verify HEAD >/dev/null 2>&1
-then
-	against=HEAD
-else
-	against=$(git hash-object -t tree /dev/null)
-fi
+	# use gofmt to scan whole repo for unformatted go files
+	lines_of_unformatted_code=$(gofmt -l . )
+	if [ "$lines_of_unformatted_code" ]; then
+        echo "NOTOK: There are go files not formatted"
+		echo $lines_of_unformatted_code
+		exit 1;
+    else
+		echo "OK: All go files formatted"
+    fi
+}
 
-# Redirect output to stderr.
-exec 1>&2
-
-exit 1
+case "$1" in
+    --about )
+        echo "Check Go code formatting"
+        ;;
+    * )
+        test_fmt
+        ;;
+esac

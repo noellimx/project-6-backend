@@ -7,7 +7,6 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-
 func helloHandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/hello" {
 		http.Error(w, "404 not found, from handler.", http.StatusNotFound)
@@ -21,7 +20,6 @@ func helloHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Fprintf(w, "Hello!")
 }
-
 
 func formHandler(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
@@ -39,13 +37,12 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
 func DummyRouter() http.Handler {
 	r := chi.NewRouter()
 
-	r.Route("/dummy", func (r chi.Router) {
+	r.Route("/dummy", func(r chi.Router) {
 
-        r.HandleFunc("/form", formHandler)
-	r.HandleFunc("/hello", helloHandler)
+		r.HandleFunc("/form", formHandler)
+		r.HandleFunc("/hello", helloHandler)
 
-
-    })
+	})
 
 	return r
 }

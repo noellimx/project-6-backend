@@ -16,7 +16,7 @@ func getAllUsers(w http.ResponseWriter, r *http.Request) {
 	allUser := database.Db.Find(&users)
 
 	json.NewEncoder(w).Encode(&allUser)
-	fmt.Printf("running within getAllUsers middleware")
+	fmt.Printf("running within getAllUsers middlewasre")
 	fmt.Println(allUser)
 }
 
