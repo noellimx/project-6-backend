@@ -1,7 +1,20 @@
+
+# Development
+
 # RTFM
 
 Each environment should have its own test and production configuration.
 
+
+# githooks
+
+
+
+## Example
+plug hook on development environment
+
+
+```cp ./githooks/pre-commit .git/hooks/pre-commit```
 # package name
 
 gomoon
@@ -9,6 +22,7 @@ gomoon
 # Database Configuration
 
 Using postgres
+
 
 ## database_name
 
