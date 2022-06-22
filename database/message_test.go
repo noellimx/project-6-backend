@@ -29,9 +29,10 @@ func TestCreateAndGetOneMessage(t *testing.T) {
 	actualButRoundedTime := newMessage.Time.Round(time.Millisecond)
 
 	if actualButRoundedTime.GoString() == gotButRoundedTime.GoString() {
+
+		t.Fatal("created message, but different time as compared to offset from GoString")
 		t.Log(actualButRoundedTime.Unix())
 		t.Log(gotButRoundedTime.Unix())
-		t.Fatal("created message, but different time as compared to offset from GoString")
 	}
 
 }
