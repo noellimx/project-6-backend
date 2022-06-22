@@ -11,6 +11,8 @@ jobs:
       - uses: harmon758/postgresql-action@v1
         with:
           postgresql version: '11'
+      - name: Create database
+          run: createdb ${{secrets.PSQL_DATABASENAME}}
       - uses: actions/setup-go@v3
         with:
           go-version: ${{ matrix.go-version }}
