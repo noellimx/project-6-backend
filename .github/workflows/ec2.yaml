@@ -2,12 +2,13 @@ name: EC2 Deployment
 on: [push, pull_request]
 
 jobs:
-  runner-job:
-      # You must use a Linux environment when using service containers or container jobs
-      runs-on: ubuntu-latest
-
-      # Service containers to run with `runner-job`
-      services:
+  test:
+    strategy:
+      matrix:
+        go-version: [1.17.x, 1.18.x]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    services:
         # Label used to access the service container
         postgres:
           # Docker Hub image
@@ -24,14 +25,6 @@ jobs:
           ports:
             # Maps tcp port 5432 on service container to the host
             - 5432:5432
-  
-
-  test:
-    strategy:
-      matrix:
-        go-version: [1.17.x, 1.18.x]
-        os: [ubuntu-latest]
-    runs-on: ${{ matrix.os }}
     steps:
 
       - name: Create database
