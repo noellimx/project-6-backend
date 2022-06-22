@@ -26,9 +26,6 @@ jobs:
             # Maps tcp port 5432 on service container to the host
             - 5432:5432
     steps:
-
-      - name: Create database
-        run: createdb ${{secrets.PSQL_DATABASENAME}}
       - uses: actions/setup-go@v3
         with:
           go-version: ${{ matrix.go-version }}
