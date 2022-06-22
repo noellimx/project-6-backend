@@ -1,5 +1,5 @@
 name: EC2 Deployment
-on: [push, pull_request, merge]
+on: [push, pull_request]
 jobs:
   test:
     strategy:
