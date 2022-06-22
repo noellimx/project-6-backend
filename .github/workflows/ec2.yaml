@@ -15,5 +15,7 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
       - uses: actions/checkout@v3
+      - name: Prepare configuration from Github Secrets
+        run: echo  ${{ secrets.MYCONFIG }}
       - name: run pre commit hook
         run: ./githooks/pre-commit

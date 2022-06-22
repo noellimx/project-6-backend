@@ -23,7 +23,22 @@ plug hook on development environment
 
 
 
+## Github Action - Towards Deployment
 
+# config.json [See](#configuration)
+
+set secret variables for the gh environment via github repo settings. workflow will read from the settings and prepare config.json prior to running the program.
+
+## mapping of names from config.json to github secrets
+
+
+config.json key : Nesting = ".", Multi-word seperator: "_", case: sensitive
+
+=> github secret name : Nesting = "_", Multi-word seperator: "", case: all uppercase
+
+Example: config.db.my_secret => CONFIG_MYSECRET
+
+Please note json keys are case-sensitive but github secret is case-insensitive
 
 # Database Configuration
 
