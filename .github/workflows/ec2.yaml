@@ -87,11 +87,13 @@ jobs:
           sudo cp credentials.json "${configpath}/config.json"
           cat "${configpath}/config.json"
       - name: run pre commit hook
-        run: ./githooks/pre-commit
-      - name: bundle go
+        run: ./dev-hooks/git-hooks/pre-commit
+      - name: Compile go to binary
         # the path to the binary should be $GOPATH/bin, we will explicitly point to $HOME/go/bin in case the env path is not set.
+        # Sanity check that the binary exist.
         run: |
           echo $GOPATH
           go install
           ls $HOME/go/bin
           ls $HOME/go/bin/gomoon
+      - name: Load binary into ec2

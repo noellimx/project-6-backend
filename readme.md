@@ -16,7 +16,7 @@ git hooks are found in ./githooks.
 
 plug hook on development environment
 
-`cp ./githooks/pre-commit .git/hooks/pre-commit`
+`cp ./dev-hooks/git-hooks/pre-commit .git/hooks/pre-commit`
 
 ## Github Action - Towards Deployment
 
