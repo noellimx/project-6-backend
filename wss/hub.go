@@ -1,9 +1,16 @@
 package wss
 
-import "github.com/gorilla/websocket"
+import (
+	"fmt"
 
-func Broadcast(users []*websocket.Conn, p []byte) {
-	for _, user := range users {
-		user.WriteMessage(websocket.BinaryMessage, p)
+	"github.com/gorilla/websocket"
+)
+
+func Broadcast(connections []*websocket.Conn, p []byte) {
+	fmt.Println("broadcasting to everyone in channel")
+	for _, connection := range connections {
+
+		connection.WriteMessage(websocket.BinaryMessage, p)
+
 	}
 }

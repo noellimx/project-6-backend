@@ -5,12 +5,14 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"reflect"
 	"time"
 
 	"github.com/go-chi/chi/v5"
 
 	"github.com/gorilla/websocket"
 
+	"proj6/gomoon/database"
 	"proj6/gomoon/wss"
 )
 
@@ -22,38 +24,54 @@ var upgrader = websocket.Upgrader{
 }
 
 func StoreMessageInTickerRoom(result *map[string]interface{}) {
+	thisResult := *result
 
-	token := (*result)["token"]
-	_ = token
-	// from token need to get username
+	//removed JWT for now, reason being that cant find username
 
-	message := (*result)["message"]
+	// tokenString := (thisResult)["token"]
+	// fmt.Println(tokenString)
+
+	// ddd := tokenString.(string)
+
+	// claims := jwt.MapClaims{}
+	// _, err := jwt.ParseWithClaims(ddd, claims, func(token *jwt.Token) (interface{}, error) {
+	// 	return []byte(JwtSecret), nil
+	// })
+
+	// username := claims["username"]
+	// ... error handling
+	message := (thisResult)["message"]
 	_ = message
+	username := (thisResult)["token"]
+	roomId := (thisResult)["roomId"]
+	ticker := roomId
+	// if err != nil {
+	// 	fmt.Println(username)
+	// 	fmt.Println(err)
+	// 	return
+	// }
+	// fmt.Println("running storemessage func3")
 
-	roomId := (*result)["roomId"]
-	_ = roomId
+	// // do something with decoded claims
+	// for key, val := range claims {
+	// 	fmt.Printf("Key: %v, value: %v\n", key, val)
+	// }
+	// // from token need to get username
 
 	t := time.Now()
 	_ = t
 
 	// Store the result
-
+	fmt.Println("storing message to db")
+	database.AddToMessage(ticker.(string), message.(string), username.(string), t)
 	// And broadcase message to room
 }
-func ManageEvents(conn *websocket.Conn, p []byte) {
 
-	var result map[string]interface{}
-
-	json.Unmarshal(p, &result)
-
-	event := result["event"].(string)
-
-	fmt.Println(event + "event: ")
-
-	if event == "send-to-ticker-room" {
-
-		StoreMessageInTickerRoom(&result)
-	}
+func ChatHistory(result *map[string]interface{}) {
+	thisResult := *result
+	roomId := (thisResult)["roomId"]
+	ticker := roomId
+	fmt.Println("chatHistory func, ticker", ticker)
 
 }
 
@@ -61,22 +79,34 @@ func ManageEvents(conn *websocket.Conn, p []byte) {
 // through on our WebSocket connection
 func listenToWsConnection(conn *websocket.Conn) {
 	for {
+
 		// read in a message
 		messageType, p, err := conn.ReadMessage()
 		if err != nil {
 			log.Println(err)
 			return
 		}
-
 		// print out that message for clarity
 		log.Println("[listenToWsConnection]")
+		var result map[string]interface{}
+
+		json.Unmarshal(p, &result)
 		fmt.Println("text" + string(p))
+		event := result["event"].(string)
+
+		fmt.Println(event + "line 104")
+		if event == "send-to-ticker-room" {
+			fmt.Println("event for sendToTicker fire")
+			StoreMessageInTickerRoom(&result)
+			// get the result
+			// broadcast to people who are online to this ticker room
+		}
 
 		wss.Broadcast(connections, p)
 
 		// TODO try catch
 
-		ManageEvents(conn, p)
+		// ManageEvents(conn, p)
 
 		if err := conn.WriteMessage(messageType, p); err != nil {
 			log.Println(err)
@@ -98,10 +128,18 @@ func wsEndpoint(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Client Connected")
+
 	err = ws.WriteMessage(1, []byte("Hi Client!"))
 	if err != nil {
 		log.Println(err)
 	}
+
+	data := database.FindMessagesInDB()
+	fmt.Println(data)
+	dataType := reflect.TypeOf(data)
+	fmt.Println(dataType)
+
+	// wss.Broadcast(connections, p)
 
 	connections = append(connections, ws)
 
@@ -114,4 +152,8 @@ func UpGradeToWsRouter() http.Handler {
 	r.HandleFunc("/", wsEndpoint)
 
 	return r
+}
+
+func GetHistoryData(w http.ResponseWriter, r *http.Request) {
+
 }

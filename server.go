@@ -42,11 +42,17 @@ func EnvSubPath(env config.Environment) string {
 }
 
 var envSubPath = "/" + EnvSubPath(config.Production)
-
-var certificatePath = certFilePathFileParent + "/customkeystore/" + envSubPath + globalConfig.Https.Paths.Certificate
-var keyPath = certFilePathFileParent + "/customkeystore/" + envSubPath + globalConfig.Https.Paths.Key
+var certificatePath = certFilePathFileParent + "/customkeystore" + envSubPath + globalConfig.Https.Paths.Certificate
+var keyPath = certFilePathFileParent + "/customkeystore" + envSubPath + globalConfig.Https.Paths.Key
 
 func main() {
+
+	// type Message struct {
+	// 	gorm.Model
+	// 	message string
+	// 	roomId  int
+	// 	time    time.Time
+	// }
 
 	rand.Seed(time.Now().UnixNano())
 
@@ -71,7 +77,7 @@ func main() {
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 
 		s, err := r.Cookie("_gothic_session")
-
+		fmt.Println("accessing / route")
 		if err == nil {
 			fmt.Println(s.Value)
 
@@ -85,6 +91,13 @@ func main() {
 	r.Mount("/auth", routes.HTTPAuthRouter())
 
 	r.Mount("/ws", routes.UpGradeToWsRouter())
+
+	r.Get("/getChatHistory", func(w http.ResponseWriter, r *http.Request) {
+
+		fmt.Println("running /getChatHistory")
+		data := database.FindMessagesInDB()
+		return data
+	})
 
 	func() {
 		fqdn := globalConfig.Network.Domain + ":" + globalConfig.Network.Port
