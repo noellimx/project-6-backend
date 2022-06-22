@@ -32,10 +32,20 @@ func Init(dbConfig *config.PSQL) {
 	port := dbConfig.Port
 	username := dbConfig.Username
 	dbName := dbConfig.DatabaseName
+	password := dbConfig.Password
 
-	Db, err = gorm.Open("postgres", "host="+host+" port="+port+" user="+username+" dbname="+dbName+" sslmode=disable")
+	if password == "" {
+		fmt.Println("Info: No password is supplied for the database.")
+	} else {
+		fmt.Println("Info: Password is supplied to the database")
+
+	}
+
+	Db, err = gorm.Open("postgres", "host="+host+" port="+port+" user="+username+" password="+password+" dbname="+dbName+" sslmode=disable")
 
 	if err != nil {
+
+		defer fmt.Println(err)
 		panic("failed to connect database with configuration: " + "host=" + host + " port=" + port + " user=" + username + " dbname=" + dbName + " sslmode=disable")
 	} else {
 		fmt.Println("dbName: " + dbName)
