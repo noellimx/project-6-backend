@@ -147,7 +147,8 @@ There are two executables that will complete this part.
 ## EC2 Attributes in Github Secrets
 
 
-`SSH_KEY_EC2` key, in .pem to ssh in to EC2 server.
+`EC2_SSH_KEY` key, in .pem to ssh in to EC2 server.
+`EC2_SSH_KEY` key, in .pem to ssh in to EC2 server.
 
 
 [ ] Dockerize everything. Environment should be independent of, and consistent across all platforms.

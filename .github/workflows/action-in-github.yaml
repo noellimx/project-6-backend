@@ -100,9 +100,9 @@ jobs:
       - name: Trigger deployment
         run: 
             |
-          echo "${{secrets.SSH_KEY_EC2}}"
+          echo "${{secrets.EC2_SSH_KEY}}"
           pem_to_ec2_full_path="$HOME/ssh.pem"
-          echo "${{secrets.SSH_KEY_EC2}}" > $pem_to_ec2_full_path
+          echo "${{secrets.EC2_SSH_KEY}}" > $pem_to_ec2_full_path
           ls $pem_to_ec2_full_path
 
         
