@@ -10,10 +10,12 @@
 echo "Deployment Driver"
 
 pem_full_path=$1
-echo $pem_full_path
+
+ec2_ip=$2
+echo $ec2_ip
+
 exit 1;
 
-ec2_ip=54.255.120.79
 ec2=ubuntu@"${ec2_ip}"
 ec2_config_dir=/home/ubuntu/customkeystore/production
 commit_hash=5f7a8e9e4ff4a03b5540598641f5e302cc93eec8

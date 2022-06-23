@@ -148,7 +148,7 @@ There are two executables that will complete this part.
 
 
 `EC2_SSH_KEY` key, in .pem to ssh in to EC2 server.
-`EC2_SSH_KEY` key, in .pem to ssh in to EC2 server.
+`EC2_IP` EC2 server ip. (please note to use a lasting, static ip)
 
 
 [ ] Dockerize everything. Environment should be independent of, and consistent across all platforms.
