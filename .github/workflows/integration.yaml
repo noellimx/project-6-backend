@@ -41,6 +41,10 @@ jobs:
           go-version: ${{ matrix.go-version }}
       - name: Checks out this branch
         uses: actions/checkout@v3
+      - name: Show GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
       - name: Prepare configuration from Github Secrets
         uses: jsdaniell/create-json@1.1.2
         with:
