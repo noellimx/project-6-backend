@@ -21,12 +21,11 @@ commit_hash=$3
 
 
 deploy_script_path=$4
-cat $pem_full_path
 
 
 
 echo "Copying deployment script to ec2 instance"
-
+cat $deploy_script_path
 ls $deploy_script_path
 
 scp -tt -i "${pem_full_path}" "${deploy_script_path}" "${ec2}:./"

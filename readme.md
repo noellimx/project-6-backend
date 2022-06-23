@@ -142,7 +142,7 @@ Will be done in github workflow.
 
 There are two executables that will complete this part.
 1. `./dev-hooks/deployment-hooks/trigger-deploy.sh` Driver code to inject deployment script into remote server. \
-2. `./dev-hooks/deployment-hooks/deploy-ec2-gomoon-be.sh` The deployment script to be executed in the remote EC2 server.
+2. `./dev-hooks/deployment-hooks/deployec2gomoonbe.sh` The deployment script to be executed in the remote EC2 server.
 
 ## EC2 Attributes in Github Secrets
 
