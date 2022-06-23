@@ -104,5 +104,8 @@ jobs:
           pem_to_ec2_full_path="$HOME/ssh.pem"
           echo "${{secrets.EC2_SSH_KEY}}" > $pem_to_ec2_full_path
           ls $pem_to_ec2_full_path
+          deploy_hooks_dir=./dev-hooks/deployment-hooks
+          cd $deploy_hooks_dir
+          ./deploy-ec2-gomoon-be.sh
 
         
