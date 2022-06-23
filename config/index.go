@@ -9,7 +9,7 @@ import (
 )
 
 type JWT struct {
-	Secret string `json:"secret"`
+	Secret string `json:"secret"` // Secret to sign the JWT
 }
 type PSQL struct {
 	Username     string `json:"username"`
@@ -40,9 +40,9 @@ type GlobalConfig struct {
 
 	Https struct {
 		Paths struct {
-			CertFileParentVar string `json:"cert_file_parent_var"`
-			Certificate       string `json:"certificate"`
-			Key               string `json:"key"`
+			CertFileParentVar string `json:"cert_file_parent_var"` // The value of this environment variable will be the parent directory
+			Certificate       string `json:"certificate"`          // file name of certificate
+			Key               string `json:"key"`                  // file name of key
 		} `json:"paths"`
 	}
 }
