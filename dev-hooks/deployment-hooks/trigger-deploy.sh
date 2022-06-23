@@ -23,7 +23,7 @@ commit_hash=$3
 deploy_script_path=$4
 cat $pem_full_path
 
-echo "Supply configuration file"
+echo "Supply configuration file to ${ec2}"
 
 ssh -tt -i "${pem_full_path}" "${ec2}" "sudo rm -rf ${ec2_config_dir}"
 scp -rt -i "${pem_full_path}" ${ec2_config_dir} "${ec2}":"${ec2_config_dir}"
