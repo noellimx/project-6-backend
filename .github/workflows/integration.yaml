@@ -1,5 +1,7 @@
 name: EC2 Deployment
-on: [push, pull_request]
+on: 
+  push:
+  pull_request:
 
 env: 
   PGPW : ${{secrets.PSQL_PASSWORD}}
@@ -97,15 +99,3 @@ jobs:
           go install
           ls $HOME/go/bin
           ls $HOME/go/bin/gomoon
-      - name: Trigger deployment
-        run: 
-            |
-          echo "${{secrets.EC2_SSH_KEY}}"
-          pem_to_ec2_full_path="$HOME/ssh.pem"
-          echo "${{secrets.EC2_SSH_KEY}}" > $pem_to_ec2_full_path
-          ls $pem_to_ec2_full_path
-          deploy_hooks_dir=./dev-hooks/deployment-hooks
-          cd $deploy_hooks_dir
-          ./trigger-deploy.sh $pem_to_ec2_full_path ${{secrets.EC2_IP}} ${GITHUB_SHA}
-
-        
