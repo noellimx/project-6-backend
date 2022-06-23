@@ -18,14 +18,11 @@ ec2=$ec2_username@"${ec2_ip}"
 
 # ec2_config_dir=/home/ubuntu/customkeystore/production
 commit_hash=$3
-echo $commit_hash
 
+
+deploy_script_path=$4
+echo $deploy_script_path
 exit 1;
-
-deploy_script=some.sh
-
-deploy_script_path="./${deploy_script}"
-
 echo "Supply configuration file"
 
 ssh -t -i "${pem_full_path}" "${ec2}" "sudo rm -rf ${ec2_config_dir}"
