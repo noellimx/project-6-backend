@@ -20,7 +20,10 @@ Each environment (EC2, local, Github Runner etc) should have its own test and pr
 
 
 ## 1.1 Go
+Development will use golang and its utilities.
+
 ## 1.2 postgresql
+For database service.
 
 
 # 2. One time setup for new environment
