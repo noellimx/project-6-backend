@@ -118,11 +118,9 @@ func HTTPAuthRouter() http.Handler {
 			Value: jwtStr,
 			Path:  "/",
 		}
+
 		http.SetCookie(w, cookie)
-
-		fmt.Fprintf(w, user.Email)
-		fmt.Fprintf(w, "")
-
+		http.Redirect(w, r, "https://localhost:3004", http.StatusMovedPermanently)
 	})
 
 	// option 1: login with google

@@ -92,12 +92,7 @@ func main() {
 
 	r.Mount("/ws", routes.UpGradeToWsRouter())
 
-	r.Get("/getChatHistory", func(w http.ResponseWriter, r *http.Request) {
-
-		fmt.Println("running /getChatHistory")
-		data := database.FindMessagesInDB()
-		return data
-	})
+	r.Mount("/history", routes.MessageRouter())
 
 	func() {
 		fqdn := globalConfig.Network.Domain + ":" + globalConfig.Network.Port

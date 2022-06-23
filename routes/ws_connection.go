@@ -134,11 +134,6 @@ func wsEndpoint(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 
-	data := database.FindMessagesInDB()
-	fmt.Println(data)
-	dataType := reflect.TypeOf(data)
-	fmt.Println(dataType)
-
 	// wss.Broadcast(connections, p)
 
 	connections = append(connections, ws)
@@ -154,6 +149,11 @@ func UpGradeToWsRouter() http.Handler {
 	return r
 }
 
-func GetHistoryData(w http.ResponseWriter, r *http.Request) {
+func GetHistoryData(w http.ResponseWriter, r *http.Request) *[]database.Message {
+	data := database.FindMessagesInDB()
+	fmt.Println(data)
+	dataType := reflect.TypeOf(data)
+	fmt.Println(dataType)
 
+	return data
 }
