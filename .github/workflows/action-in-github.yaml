@@ -7,7 +7,7 @@ env:
   PGUN :  ${{secrets.PSQL_USERNAME}}
 
 jobs:
-  test:
+  job1:
     strategy:
       matrix:
         go-version: [1.17.x, 1.18.x]
@@ -37,7 +37,8 @@ jobs:
       - uses: actions/setup-go@v3
         with:
           go-version: ${{ matrix.go-version }}
-      - uses: actions/checkout@v3
+      - name: Checks out this branch
+        uses: actions/checkout@v3
       - name: Prepare configuration from Github Secrets
         uses: jsdaniell/create-json@1.1.2
         with:
