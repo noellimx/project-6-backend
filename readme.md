@@ -83,7 +83,7 @@ pre-commit hook should also test all go packages.
 
 If you want to run the binary, it should be ready by now.
 
-`$ go install` will build a binary in `$GOPATH`
+`$ go install` will build a binary in `$GOPATH`. Then, 
 
 `$ go run .` run the source code
 
