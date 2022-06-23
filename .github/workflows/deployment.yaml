@@ -17,6 +17,9 @@ jobs:
     steps:
       - name: Checks out this branch
         uses: actions/checkout@v3
+      - name: whoisthis
+        run:
+          ipconfig
       - name: executing remote ssh commands using ssh key
         uses: appleboy/ssh-action@master
         with:
