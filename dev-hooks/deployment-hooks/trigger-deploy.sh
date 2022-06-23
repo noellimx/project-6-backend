@@ -21,6 +21,7 @@ commit_hash=$3
 
 
 deploy_script_path=$4
+cat $pem_full_path
 
 echo "Supply configuration file"
 
