@@ -25,8 +25,8 @@ echo "Copying deployment script to ec2 instance ${ec2}"
 
 # ping -n 1 -W 3 ${ec2_ip}
 echo "pinging 54.255.120.79 fruitt.art"
-sudo ping -n 1 -W 3 fruitt.art
-sudo ping -n 1 -W 3 54.255.120.79
+# sudo ping -n 1 -W 3 fruitt.art
+# sudo ping -n 1 -W 3 54.255.120.79
 exit 1;
 
 # ssh -tt -i "${pem_full_path}" "${ec2}" "df -H"
