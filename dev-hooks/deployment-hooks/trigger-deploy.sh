@@ -24,8 +24,8 @@ deploy_script_path=$4
 
 echo "Supply configuration file"
 
-ssh -t -i "${pem_full_path}" "${ec2}" "sudo rm -rf ${ec2_config_dir}"
-scp -r -i "${pem_full_path}" ${ec2_config_dir} "${ec2}":"${ec2_config_dir}"
+ssh -tt -i "${pem_full_path}" "${ec2}" "sudo rm -rf ${ec2_config_dir}"
+scp -rt -i "${pem_full_path}" ${ec2_config_dir} "${ec2}":"${ec2_config_dir}"
 
 echo $deploy_script_path
 exit 1;
