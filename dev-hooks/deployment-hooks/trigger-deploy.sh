@@ -25,7 +25,7 @@ echo "Copying deployment script to ec2 instance ${ec2}"
 
 
 
-scp -tt -i "${pem_full_path}" "${deploy_script_path}" ${ec2}:"$HOME/"
+scp -i "${pem_full_path}" -tt "${deploy_script_path}" ${ec2}:"$HOME/"
 
 echo $deploy_script_path
 exit 1;
