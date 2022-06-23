@@ -20,7 +20,7 @@ jobs:
       - name: executing remote ssh commands using ssh key
         uses: appleboy/ssh-action@master
         with:
-          host: fruitt.art
+          host: 54.255.120.79
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
