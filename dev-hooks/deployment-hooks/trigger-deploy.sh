@@ -4,22 +4,23 @@
 # This file is the driver code for remote deployment.
 # Assumes control of the remote server and executes the deployment script.
 
-# pem_name="go-moon-ec2.pem"
-# pem_path="${HOME}/keystore"
+
 
 echo "Deployment Driver"
 
-pem_full_path=$1
+pem_full_path=$1 # file path to private key to access the instance
 
 ec2_ip=$2
-echo $ec2_ip
+
+ec2_username=ubuntu
+ec2=$ec2_username@"${ec2_ip}"
+
+
+# ec2_config_dir=/home/ubuntu/customkeystore/production
+commit_hash=$3
+echo $commit_hash
 
 exit 1;
-
-ec2=ubuntu@"${ec2_ip}"
-ec2_config_dir=/home/ubuntu/customkeystore/production
-commit_hash=5f7a8e9e4ff4a03b5540598641f5e302cc93eec8
-
 
 deploy_script=some.sh
 
