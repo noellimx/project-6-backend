@@ -17,15 +17,23 @@ jobs:
     steps:
       - name: Checks out this branch
         uses: actions/checkout@v3
-      - name: Trigger deployment
-        run: 
-            |
-          echo "${{secrets.EC2_SSH_KEY}}"
-          pem_to_ec2_full_path="$HOME/ssh.pem"
-          echo "${{secrets.EC2_SSH_KEY}}" > $pem_to_ec2_full_path
-          ls $pem_to_ec2_full_path
-          deploy_hooks_dir=./dev-hooks/deployment-hooks
-          cd $deploy_hooks_dir
-          sudo ping -n 1 -W 3 54.255.120.79
-          sudo ./trigger-deploy.sh $pem_to_ec2_full_path ${{secrets.EC2_IP}} ${GITHUB_SHA} ./deployec2gomoonbe.sh
+      - name: executing remote ssh commands using ssh key
+        uses: appleboy/ssh-action@master
+        with:
+          host: fruitt.art
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: whoami
+      # - name: Trigger deployment
+      #   run: 
+      #       |
+      #     echo "${{secrets.EC2_SSH_KEY}}"
+      #     pem_to_ec2_full_path="$HOME/ssh.pem"
+      #     echo "${{secrets.EC2_SSH_KEY}}" > $pem_to_ec2_full_path
+      #     ls $pem_to_ec2_full_path
+      #     deploy_hooks_dir=./dev-hooks/deployment-hooks
+      #     cd $deploy_hooks_dir
+      #     sudo ping -n 1 -W 3 54.255.120.79
+      #     sudo ./trigger-deploy.sh $pem_to_ec2_full_path ${{secrets.EC2_IP}} ${GITHUB_SHA} ./deployec2gomoonbe.sh
         
