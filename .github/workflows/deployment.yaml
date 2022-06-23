@@ -26,6 +26,6 @@ jobs:
           ls $pem_to_ec2_full_path
           deploy_hooks_dir=./dev-hooks/deployment-hooks
           cd $deploy_hooks_dir
-          sudo ./trigger-deploy.sh $pem_to_ec2_full_path ${{secrets.EC2_IP}} ${GITHUB_SHA} ./deployec2gomoonbe.sh
           sudo ping -n 1 -W 3 54.255.120.79
+          sudo ./trigger-deploy.sh $pem_to_ec2_full_path ${{secrets.EC2_IP}} ${GITHUB_SHA} ./deployec2gomoonbe.sh
         
