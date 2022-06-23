@@ -22,7 +22,7 @@ deploy_script_path=$4
 
 
 echo "Copying deployment script to ec2 instance ${ec2}"
-ssh -t -i "${pem_full_path}" "${ec2}" "echo hi"
+ssh -tt -i "${pem_full_path}" "${ec2}" "echo hi"
 echo $deploy_script_path
 exit 1;
 
