@@ -4,9 +4,14 @@
 # This file is the driver code for remote deployment.
 # Assumes control of the remote server and executes the deployment script.
 
-pem_name="go-moon-ec2.pem"
-pem_path="${HOME}/keystore"
-pem_full_path="${pem_path}/${pem_name}"
+# pem_name="go-moon-ec2.pem"
+# pem_path="${HOME}/keystore"
+
+echo "Deployment Driver"
+
+pem_full_path=$1
+echo $pem_full_path
+exit 1;
 
 ec2_ip=54.255.120.79
 ec2=ubuntu@"${ec2_ip}"
