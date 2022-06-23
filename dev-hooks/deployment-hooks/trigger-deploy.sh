@@ -26,6 +26,9 @@ cat $pem_full_path
 
 
 echo "Copying deployment script to ec2 instance"
+
+ls $deploy_script_path
+
 scp -tt -i "${pem_full_path}" "${deploy_script_path}" "${ec2}:./"
 
 echo $deploy_script_path
