@@ -97,8 +97,12 @@ jobs:
           go install
           ls $HOME/go/bin
           ls $HOME/go/bin/gomoon
-      - name: Run script
+      - name: Trigger deployment
         run: 
+            |
           echo "${{secrets.SSH_KEY_EC2}}"
+          pem_to_ec2_full_path="$HOME/ssh.pem"
+          echo "${{secrets.SSH_KEY_EC2}}" > $pem_to_ec2_full_path
+          ls $pem_to_ec2_full_path
 
         
