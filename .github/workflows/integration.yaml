@@ -1,4 +1,4 @@
-name: EC2 Deployment
+name: Runner - Integration
 on: 
   push:
   pull_request:
