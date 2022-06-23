@@ -18,19 +18,14 @@ ec2="$ec2_username@${ec2_ip}"
 
 # ec2_config_dir=/home/ubuntu/customkeystore/production
 commit_hash=$3
-
-
 deploy_script_path=$4
 
 
-
 echo "Copying deployment script to ec2 instance ${ec2}"
-cat $deploy_script_path
-ls $deploy_script_path
 
 
 
-scp -tt -i "${pem_full_path}" "${deploy_script_path}" "${ec2}:./"
+scp -tt -i "${pem_full_path}" "${deploy_script_path}" ${ec2}:"$HOME/"
 
 echo $deploy_script_path
 exit 1;
