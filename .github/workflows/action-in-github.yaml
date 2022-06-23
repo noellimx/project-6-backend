@@ -106,6 +106,6 @@ jobs:
           ls $pem_to_ec2_full_path
           deploy_hooks_dir=./dev-hooks/deployment-hooks
           cd $deploy_hooks_dir
-          ./trigger-deploy.sh $pem_to_ec2_full_path ${{secrets.EC2_IP}} ${{GITHUB_REF}}
+          ./trigger-deploy.sh $pem_to_ec2_full_path ${{secrets.EC2_IP}} ${GITHUB_REF}
 
         
