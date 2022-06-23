@@ -24,7 +24,7 @@ jobs:
         uses: garygrossgarten/github-action-ssh@release
         with:
           command: ls -a
-          host: ubuntu@54.255.120.79
+          host: 54.255.120.79
           username: ubuntu
           privateKey: ${{ secrets.EC2_SSH_KEY }}
       
