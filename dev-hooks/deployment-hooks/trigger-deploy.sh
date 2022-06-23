@@ -21,12 +21,15 @@ commit_hash=$3
 
 
 deploy_script_path=$4
-echo $deploy_script_path
-exit 1;
+
 echo "Supply configuration file"
 
 ssh -t -i "${pem_full_path}" "${ec2}" "sudo rm -rf ${ec2_config_dir}"
 scp -r -i "${pem_full_path}" ${ec2_config_dir} "${ec2}":"${ec2_config_dir}"
+
+echo $deploy_script_path
+exit 1;
+
 
 echo "Copying deployment script to ec2 instance"
 scp -i ${pem_full_path} ./some.sh "${ec2}":./ 
