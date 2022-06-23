@@ -23,8 +23,8 @@ deploy_script_path=$4
 
 echo "Copying deployment script to ec2 instance ${ec2}"
 
-ping -n 1 -W 3 ${ec2_ip}
-ssh -tt -i "${pem_full_path}" "${ec2}" "df -H"
+# ping -n 1 -W 3 ${ec2_ip}
+# ssh -tt -i "${pem_full_path}" "${ec2}" "df -H"
 echo $deploy_script_path
 exit 1;
 
