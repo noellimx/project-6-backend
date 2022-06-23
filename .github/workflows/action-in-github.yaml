@@ -89,7 +89,7 @@ jobs:
           cat "${configpath}/config.json"
       - name: run pre commit hook
         run: ./dev-hooks/git-hooks/pre-commit
-      - name: Compile go to binary
+      - name: Compile go to binary (Sanity Check)
         # the path to the binary should be $GOPATH/bin, we will explicitly point to $HOME/go/bin in case the env path is not set.
         # Sanity check that the binary exist.
         run: |
@@ -97,5 +97,8 @@ jobs:
           go install
           ls $HOME/go/bin
           ls $HOME/go/bin/gomoon
+      - name: Run script
+        run: 
+          echo "${{secrets.SSH_KEY_EC2}}"
 
         
