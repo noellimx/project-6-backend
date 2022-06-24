@@ -38,7 +38,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: 22
           script: |
-            whoami
+            sudo ./deployec2gomoonbe.sh
             
       # - name: Trigger deployment
       #   run: 
