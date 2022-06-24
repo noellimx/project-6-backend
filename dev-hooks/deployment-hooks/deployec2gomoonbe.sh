@@ -18,7 +18,7 @@ go_binary_dir="$HOME/go/bin"
 
 dbname=gomoontest
 
-listeningPort=443
+listeningPort=8443 # hardcoding
 
 commit_hash=$1
 
