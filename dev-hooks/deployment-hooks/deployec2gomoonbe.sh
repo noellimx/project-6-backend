@@ -113,9 +113,8 @@ ls ${go_binary_dir}/${app_name}
 echo "[Run] Killing existing process on port ${listeningPort}"
 
 sudo fuser -k ${listeningPort}/tcp
-exit 1;
 
-${go_binary_dir}/${app_name}
+${go_binary_dir}/${app_name} &
 
 exit 0;
 
