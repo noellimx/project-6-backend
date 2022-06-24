@@ -18,7 +18,7 @@ jobs:
       - name: Checks out this branch
         uses: actions/checkout@v3
       - name: whoisthis
-        run:
+        run: |
           ifconfig
           echo ${GITHUB_SHA}
       - name: copy file into runner's home
@@ -38,8 +38,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.SSH_KEY }}
           port: 22
-          script: |
-            sudo ./deployec2gomoonbe.sh ${GITHUB_SHA}
+          script: sudo ./deployec2gomoonbe.sh ${GITHUB_SHA}
             
       # - name: Trigger deployment
       #   run: 
