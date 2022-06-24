@@ -23,16 +23,14 @@ deploy_script_path=$4
 
 echo "Copying deployment script to ec2 instance ${ec2}"
 
-echo " 54.255.120.79 fruitt.art"
-
-exit 1;
-
 # ssh -tt -i "${pem_full_path}" "${ec2}" "df -H"
 echo $deploy_script_path
 
-scp -tt "${deploy_script_path}" localhost:'./'
+# scp -tt "${deploy_script_path}" localhost:'./'
 
 scp -i "${pem_full_path}" -tt "${deploy_script_path}" ${ec2}:"$HOME/"
+
+exit 1;
 
 
 
