@@ -44,15 +44,3 @@ jobs:
           script: |
             echo "$SHA"
             ./deployec2gomoonbe.sh "$SHA"
-            
-      # - name: Trigger deployment
-      #   run: 
-      #       |
-      #     echo "${{secrets.SSH_KEY}}"
-      #     pem_to_ec2_full_path="$HOME/ssh.pem"
-      #     echo "${{secrets.SSH_KEY}}" > $pem_to_ec2_full_path
-      #     ls $pem_to_ec2_full_path
-      #     deploy_hooks_dir=./dev-hooks/deployment-hooks
-      #     cd $deploy_hooks_dir 
-      #     sudo ./trigger-deploy.sh $pem_to_ec2_full_path ${{secrets.EC2_IP}} ${GITHUB_SHA} ./deployec2gomoonbe.sh
-        
