@@ -33,7 +33,7 @@ jobs:
         with:
           host: ubuntu@54.255.120.79
           username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
+          key: ${{ secrets.SSH_KEY }}
           port: 22
           script: whoami
 
