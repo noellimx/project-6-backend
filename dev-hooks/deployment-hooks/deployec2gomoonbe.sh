@@ -97,9 +97,8 @@ cd ${repo_dst}
 
 echo "[BINARY] Changing pwd to repo..."
 
-echo "commit hash ${commit_hash}"
+echo "[BINARY] Checking out ${commit_hash}"
 git checkout ${commit_hash}
-exit 1;
 
 
 echo "[BINARY] Cleaning binary... ${go_binary_dir}"
@@ -108,6 +107,7 @@ rm -rf ${go_binary_dir}/${app_name}
 echo "[BINARY] Installing..."
 
 go install
+exit 1;
 
 ls ${go_binary_dir}/${app_name}
 
