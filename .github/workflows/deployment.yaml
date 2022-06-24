@@ -20,14 +20,7 @@ jobs:
       - name: whoisthis
         run:
           ifconfig
-      # - name: ls -a via ssh
-      #   uses: garygrossgarten/github-action-ssh@release
-      #   with:
-      #     command: ls -a
-      #     host: 54.255.120.79
-      #     username: ubuntu
-      #     privateKey: ${{ secrets.SSH_KEY }}
-      
+
       - name: executing remote ssh commands using ssh key
         uses: appleboy/ssh-action@master
         with:
@@ -36,18 +29,14 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: 22
           script: whoami
-
-      #
-      #
-      # - name: Trigger deployment
-      #   run: 
-      #       |
-      #     echo "${{secrets.EC2_SSH_KEY}}"
-      #     pem_to_ec2_full_path="$HOME/ssh.pem"
-      #     echo "${{secrets.EC2_SSH_KEY}}" > $pem_to_ec2_full_path
-      #     ls $pem_to_ec2_full_path
-      #     deploy_hooks_dir=./dev-hooks/deployment-hooks
-      #     cd $deploy_hooks_dir
-      #     sudo ping -n 1 -W 3 54.255.120.79
-      #     sudo ./trigger-deploy.sh $pem_to_ec2_full_path ${{secrets.EC2_IP}} ${GITHUB_SHA} ./deployec2gomoonbe.sh
+      - name: Trigger deployment
+        run: 
+            |
+          echo "${{secrets.SSH_KEY}}"
+          pem_to_ec2_full_path="$HOME/ssh.pem"
+          echo "${{secrets.SSH_KEY}}" > $pem_to_ec2_full_path
+          ls $pem_to_ec2_full_path
+          deploy_hooks_dir=./dev-hooks/deployment-hooks
+          cd $deploy_hooks_dir
+          sudo ./trigger-deploy.sh $pem_to_ec2_full_path ${{secrets.EC2_IP}} ${GITHUB_SHA} ./deployec2gomoonbe.sh
         

@@ -110,13 +110,13 @@ plug hook on development environment
 
 Workflow can be found in default github workflow folder.
 
-# config.json
+### config.json
 
-## See: [Configuration](#configuration)
+#### See: [Configuration](#configuration)
 
 Secret variables will be set as configuration values for the gh environment via github repo settings. Workflow will read from the settings and prepare `config.json` prior to running the program.
 
-## Mapping of names from config.json to github secrets
+#### Mapping of names from config.json to github secrets
 
 config.json key : Nesting = `.`, Multi-word separator: `_`, case: sensitive
 
@@ -128,15 +128,21 @@ Please note json keys are case-sensitive but github secret is case-insensitive
 
 ## CI/CD Part 2 : Towards Deployment (Github Action -> running server on EC2)
 
+Server: EC2, Ubuntu 22
 
+### config.json
 
-# config.json
-
-## See: [One-time Configuration](#2-one-time-setup-for-new-environment)
+#### See: [One-time Configuration](#2-one-time-setup-for-new-environment)
 
 Configuration for the remote server should be in advance before auto-deployment.
 
-# auto-deployment
+NOTE 
+
+For [deployment](auto-deployment) in EC2, we will need to change ssh conf in EC2. Don't understand why.
+
+https://github.com/appleboy/ssh-action/issues/80#issuecomment-1130407377
+
+#### auto-deployment
 
 Will be done in github workflow.
 
@@ -147,7 +153,7 @@ There are two executables that will complete this part.
 ## EC2 Attributes in Github Secrets
 
 
-`EC2_SSH_KEY` key, in .pem to ssh in to EC2 server.
+`SSH_KEY` key, in .pem to ssh in to EC2 server.
 `EC2_IP` EC2 server ip. (please note to use a lasting, static ip)
 
 
