@@ -86,13 +86,16 @@ echo "[REPO] Cloning... ${repo_dst}"
 git clone ${gh_repo_url} ${repo_dst}
 
 echo "[REPO] Checking out branch... ${repo_dst}"
+thisbranch=aaaa
 
+git branch -D
 git checkout ${commit_hash}
 
 echo "[BINARY] Changing pwd to repo..."
 ls ${repo_dst}
 cd ${repo_dst}
 
+echo "[BINARY] Changing pwd to repo..."
 
 echo "commit hash ${commit_hash}"
 git checkout ${commit_hash}
