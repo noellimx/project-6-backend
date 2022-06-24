@@ -40,7 +40,9 @@ jobs:
           username: ubuntu
           key: ${{ secrets.SSH_KEY }}
           port: 22
-          script: sudo ./deployec2gomoonbe.sh $GH_SHA
+          script: |
+            echo "$GH_SHA"
+            sudo ./deployec2gomoonbe.sh "$GH_SHA"
             
       # - name: Trigger deployment
       #   run: 
