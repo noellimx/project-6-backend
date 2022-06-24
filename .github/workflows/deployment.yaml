@@ -26,7 +26,7 @@ jobs:
           command: ls -a
           host: 54.255.120.79
           username: ubuntu
-          privateKey: ${{ secrets.EC2_SSH_KEY }}
+          privateKey: ${{ secrets.SSH_KEY }}
       
       - name: executing remote ssh commands using ssh key
         uses: appleboy/ssh-action@master
