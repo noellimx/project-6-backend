@@ -69,6 +69,14 @@ Database service should be ready for connection prior to running the application
 
 This certificate is fit for testing only as it is not signed by any CA.
 
+###### Let's Encrypt Certificate for Production
+
+Obtain a public certificate signed by public CA. Its free, more secure than self-signed. In Ubuntu,
+
+`sudo apt install certbot` install certbot
+
+
+
 # 3. Download Repository and Test Source Code
 
 ## Download Example
@@ -142,7 +150,9 @@ For [deployment](auto-deployment) in EC2, we will need to change ssh conf in EC2
 
 https://github.com/appleboy/ssh-action/issues/80#issuecomment-1130407377
 
-#### auto-deployment
+#### See: [SSL Certificate for Production](#lets-encrypt-certificate-for-production)
+
+### auto-deployment
 
 Will be done in github workflow.
 
