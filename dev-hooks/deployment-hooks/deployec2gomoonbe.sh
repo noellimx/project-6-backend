@@ -110,10 +110,9 @@ go install
 
 ls ${go_binary_dir}/${app_name}
 
-
 echo "[Run] Killing existing process on port ${listeningPort}"
 
-fuser -k ${listeningPort}/tcp
+sudo fuser -k ${listeningPort}/tcp
 exit 1;
 
 ${go_binary_dir}/${app_name}
