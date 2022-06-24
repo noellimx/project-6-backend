@@ -20,13 +20,13 @@ jobs:
       - name: whoisthis
         run:
           ifconfig
-      - name: ls -a via ssh
-        uses: garygrossgarten/github-action-ssh@release
-        with:
-          command: ls -a
-          host: 54.255.120.79
-          username: ubuntu
-          privateKey: ${{ secrets.SSH_KEY }}
+      # - name: ls -a via ssh
+      #   uses: garygrossgarten/github-action-ssh@release
+      #   with:
+      #     command: ls -a
+      #     host: 54.255.120.79
+      #     username: ubuntu
+      #     privateKey: ${{ secrets.SSH_KEY }}
       
       - name: executing remote ssh commands using ssh key
         uses: appleboy/ssh-action@master
