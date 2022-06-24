@@ -38,7 +38,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: 22
           script: |
-            sudo ./deployec2gomoonbe.sh
+            sudo ./deployec2gomoonbe.sh ${{ GITHUB_SHA }}
             
       # - name: Trigger deployment
       #   run: 
