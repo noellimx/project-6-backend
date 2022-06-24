@@ -34,15 +34,16 @@ jobs:
       - name: executing remote ssh commands using ssh key
         uses: appleboy/ssh-action@master
         env:
-          GH_SHA: ${{ github.sha }}
+          SHA: ${{ github.sha }}
         with:
           host: ${{ secrets.EC2_IP }}
           username: ubuntu
           key: ${{ secrets.SSH_KEY }}
           port: 22
+          envs: SHA
           script: |
-            echo "$GH_SHA"
-            sudo ./deployec2gomoonbe.sh "$GH_SHA"
+            echo "$SHA"
+            sudo ./deployec2gomoonbe.sh "$SHA"
             
       # - name: Trigger deployment
       #   run: 
