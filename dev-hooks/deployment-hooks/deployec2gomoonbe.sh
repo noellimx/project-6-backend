@@ -22,6 +22,8 @@ listeningPort=8080
 
 commit_hash=$1
 
+echo "commit hash ${commit_hash}"
+
 
 
 # Script for deployment, should be running locally on the server machine
