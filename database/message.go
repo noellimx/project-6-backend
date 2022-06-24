@@ -15,15 +15,24 @@ type Message struct {
 	Time       time.Time
 }
 
-func AddToMessage(ticker string, message string, name string, time time.Time) {
+func NewMessage(ticker string, message string, name string, time time.Time) *Message {
+	msg := Message{}
+	msg.RoomTicker = ticker
+	msg.Message = message
+	msg.Username = name
+	msg.Time = time
 
-	newMessage := Message{}
-	newMessage.RoomTicker = ticker
-	newMessage.Message = message
-	newMessage.Username = name
-	newMessage.Time = time
+	return &msg
+}
+
+func AddToMessageFromValues(ticker string, message string, name string, time time.Time) {
+	newMessage := NewMessage(ticker, message, name, time)
 
 	Db.Create(&newMessage)
+}
+
+func AddToMessage(msg *Message) {
+	Db.Create(msg)
 }
 
 func FindMessageByUsernameTime(username string, time time.Time) *Message {

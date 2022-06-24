@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/golang-jwt/jwt"
 
 	"github.com/gorilla/websocket"
 
@@ -18,52 +19,127 @@ import (
 
 var connections = []*websocket.Conn{}
 
+var exists = struct{}{}
+
+type hub struct {
+	connectionsInRoom map[string]map[*websocket.Conn]struct{}
+	roomOfConnection  map[*websocket.Conn]string
+}
+
+func NewHub() *hub {
+	s := &hub{}
+	s.connectionsInRoom = make(map[string]map[*websocket.Conn]struct{})
+	s.roomOfConnection = make(map[*websocket.Conn]string)
+	return s
+}
+
+// 1. Subscribe connection to room. If connection is subscriber, it drops the subscription
+// 2. if the target room has nil collection, construct new empty collection
+// 3. Subscribe.
+func (s *hub) AddConnectionToRoom(roomIdToSubscribe string, conn *websocket.Conn) {
+	fmt.Println("[(s *hub) AddConnectionToRoom]")
+	// 1.
+	subscribingToRoomId, isSubscribed := s.roomOfConnection[conn]
+
+	if isSubscribed {
+		fmt.Println("[(s *hub) AddConnectionToRoom] Connection was a subscriber. Dropping previous subscription.")
+
+		delete(s.connectionsInRoom[subscribingToRoomId], conn)
+	}
+	// 2.
+	if s.connectionsInRoom[roomIdToSubscribe] == nil {
+		s.connectionsInRoom[roomIdToSubscribe] = make(map[*websocket.Conn]struct{})
+	}
+
+	// 3.
+	s.connectionsInRoom[roomIdToSubscribe][conn] = exists
+
+}
+
+func (s *hub) GetConnectionsInRoom(roomId string) []*websocket.Conn {
+
+	connarray := []*websocket.Conn{}
+
+	for conn, _ := range s.connectionsInRoom[roomId] {
+		connarray = append(connarray, conn)
+	}
+
+	return connarray
+}
+
+var myhub = NewHub()
+
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
 }
 
-func StoreMessageInTickerRoom(result *map[string]interface{}) {
-	thisResult := *result
+func newEventMessageFromFE(p []byte) (string, *database.Message, string) {
 
-	//removed JWT for now, reason being that cant find username
+	var result map[string]interface{}
 
-	// tokenString := (thisResult)["token"]
-	// fmt.Println(tokenString)
+	json.Unmarshal(p, &result)
+	roomId := result["roomId"].(string)
+	username := result["username"].(string)
+	message := result["message"].(string)
+	tString := result["time"].(string)
 
-	// ddd := tokenString.(string)
+	fmt.Println("from newEventMessage printing Time", tString)
 
-	// claims := jwt.MapClaims{}
-	// _, err := jwt.ParseWithClaims(ddd, claims, func(token *jwt.Token) (interface{}, error) {
-	// 	return []byte(JwtSecret), nil
-	// })
+	// t := result["time"].(time.Time)
+	t, _ := time.Parse(time.RFC3339, tString)
+	//2022-06-24T15:10:44.238Z
+	tokenString := result["token"].(string)
 
-	// username := claims["username"]
-	// ... error handling
-	message := (thisResult)["message"]
-	_ = message
-	username := (thisResult)["token"]
-	roomId := (thisResult)["roomId"]
-	ticker := roomId
-	// if err != nil {
-	// 	fmt.Println(username)
-	// 	fmt.Println(err)
-	// 	return
-	// }
-	// fmt.Println("running storemessage func3")
+	return "", database.NewMessage(roomId, message, username, t), tokenString
+
+}
+
+func newEventSubscribeFromFE(p []byte) (string, string) {
+	fmt.Println("newEventSubscribeFromFE")
+	var result map[string]interface{}
+	json.Unmarshal(p, &result)
+	roomId := result["roomId"].(string)
+	tokenString := result["token"].(string)
+	fmt.Println(tokenString + roomId)
+	return roomId, tokenString
+}
+
+func getEventNameFromFE(p []byte) string {
+	var result map[string]interface{}
+	json.Unmarshal(p, &result)
+	return result["event"].(string)
+}
+
+func StoreMessageInTickerRoom(message *database.Message, tokenString string) {
+
+	// Authentication before storing data
+
+	claims := jwt.MapClaims{}
+	_, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+		return []byte(JwtSecret), nil
+	})
+
+	if err != nil {
+		fmt.Println("Error authenticating for database activity")
+		return
+	}
+
+	// storing data
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	// // do something with decoded claims
 	// for key, val := range claims {
-	// 	fmt.Printf("Key: %v, value: %v\n", key, val)
 	// }
 	// // from token need to get username
 
-	t := time.Now()
-	_ = t
-
 	// Store the result
 	fmt.Println("storing message to db")
-	database.AddToMessage(ticker.(string), message.(string), username.(string), t)
+	database.AddToMessage(message)
 	// And broadcase message to room
 }
 
@@ -79,36 +155,53 @@ func ChatHistory(result *map[string]interface{}) {
 // through on our WebSocket connection
 func listenToWsConnection(conn *websocket.Conn) {
 	for {
-
 		// read in a message
-		messageType, p, err := conn.ReadMessage()
+		messageType, rawPayload, err := conn.ReadMessage()
 		if err != nil {
 			log.Println(err)
 			return
 		}
 		// print out that message for clarity
-		log.Println("[listenToWsConnection]")
-		var result map[string]interface{}
+		event := getEventNameFromFE(rawPayload)
+		log.Println("[listenToWsConnection] Event: " + event)
 
-		json.Unmarshal(p, &result)
-		fmt.Println("text" + string(p))
-		event := result["event"].(string)
-
-		fmt.Println(event + "line 104")
 		if event == "send-to-ticker-room" {
+			_, message, tokenString := newEventMessageFromFE(rawPayload)
+			//1. store message sent from frontend to backend
+			StoreMessageInTickerRoom(message, tokenString)
+			// 2. we need to get roomId and username received from frontend, roomId to make sure that socket only sends msg to users that are in the same roomId
+
+			messageThatIsStoredInDatabase := database.FindMessageByUsernameTime(message.Username, message.Time)
+
+			if messageThatIsStoredInDatabase == nil {
+				return
+			}
+
+			roomId := messageThatIsStoredInDatabase.RoomTicker
+
+			connArray := myhub.GetConnectionsInRoom(roomId)
+			dummyMessage := "A message to this room " + roomId
+
+			wss.Broadcast(connArray, []byte(dummyMessage))
+
+			//4. only send msg to specific roomId
 			fmt.Println("event for sendToTicker fire")
-			StoreMessageInTickerRoom(&result)
-			// get the result
-			// broadcast to people who are online to this ticker room
+
+		} else if event == "subsribe-to-ticker-room" {
+			roomId, _ := newEventSubscribeFromFE(rawPayload)
+			myhub.AddConnectionToRoom(roomId, conn)
 		}
 
-		wss.Broadcast(connections, p)
+		//on connection, username will be added to
+
+		//3. add username to the room that they are in
+		//   remove username when user disconnects
 
 		// TODO try catch
 
 		// ManageEvents(conn, p)
 
-		if err := conn.WriteMessage(messageType, p); err != nil {
+		if err := conn.WriteMessage(messageType, rawPayload); err != nil {
 			log.Println(err)
 			return
 		}
@@ -134,14 +227,12 @@ func wsEndpoint(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 
-	data := database.FindMessagesInDB()
-	fmt.Println(data)
-	dataType := reflect.TypeOf(data)
-	fmt.Println(dataType)
-
 	// wss.Broadcast(connections, p)
 
 	connections = append(connections, ws)
+
+	// tickerRoom := result["roomId"].(string)
+	// fmt.Println("ticker room in listentoWsConnect func", tickerRoom)
 
 	listenToWsConnection(ws)
 
@@ -154,6 +245,11 @@ func UpGradeToWsRouter() http.Handler {
 	return r
 }
 
-func GetHistoryData(w http.ResponseWriter, r *http.Request) {
+func GetHistoryData(w http.ResponseWriter, r *http.Request) *[]database.Message {
+	data := database.FindMessagesInDB()
+	fmt.Println(data)
+	dataType := reflect.TypeOf(data)
+	fmt.Println(dataType)
 
+	return data
 }
