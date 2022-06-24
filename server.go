@@ -67,6 +67,7 @@ func main() {
 	// Welcome Message
 	r.Mount("/", routes.StaticRouter())
 
+	serverInitTime := time.Now()
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 
 		s, err := r.Cookie("_gothic_session")
@@ -75,7 +76,7 @@ func main() {
 			fmt.Println(s.Value)
 
 		}
-		fmt.Fprint(w, "Hi")
+		fmt.Fprint(w, "Hi: "+serverInitTime.String())
 	})
 	r.Mount("/dummy", routes.DummyRouter())
 
