@@ -89,7 +89,7 @@ echo "[REPO] Checking out branch... ${repo_dst}"
 thisbranch=aaaa
 
 git branch -D
-git checkout ${commit_hash}
+git checkout "-${commit_hash}"
 
 echo "[BINARY] Changing pwd to repo..."
 ls ${repo_dst}

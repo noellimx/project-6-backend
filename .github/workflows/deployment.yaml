@@ -43,7 +43,7 @@ jobs:
           envs: SHA
           script: |
             echo "$SHA"
-            sudo ./deployec2gomoonbe.sh "$SHA"
+            ./deployec2gomoonbe.sh "$SHA"
             
       # - name: Trigger deployment
       #   run: 
