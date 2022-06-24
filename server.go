@@ -86,7 +86,7 @@ func main() {
 	r.Mount("/ws", routes.UpGradeToWsRouter())
 
 	func() {
-		fqdn := globalConfig.Network.Domain + ":" + globalConfig.Network.Port
+		fqdn := ":" + globalConfig.Network.Port
 		fmt.Println("Server listening on " + fqdn + "...")
 		if err := http.ListenAndServeTLS(fqdn, certificatePath, keyPath, r); err != nil {
 			log.Fatal(err)
