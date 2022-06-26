@@ -9,6 +9,8 @@ require (
 	github.com/markbates/goth v1.72.0
 )
 
+require github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
+
 require (
 	cloud.google.com/go v0.67.0 // indirect
 	github.com/golang-jwt/jwt/v4 v4.4.1
