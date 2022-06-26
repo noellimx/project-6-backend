@@ -1,0 +1,49 @@
+#!/bin/sh
+
+
+echo "In pre-commit-hook"
+check_go_fmt() {
+
+    echo "checking if all go files are formatted"
+    hash gofmt 2>&- || { echo >&2 "gofmt not in PATH."; exit 1; }
+
+
+	# use gofmt to scan whole repo for unformatted go files
+	lines_of_unformatted_code=$(gofmt -l . )
+	if [ "$lines_of_unformatted_code" ]; then
+        echo "NOTOK: There are go files not formatted"
+		echo $lines_of_unformatted_code
+		exit 1;
+    else
+		echo "OK: All go files formatted"
+    fi
+}
+
+check_go_test(){
+    echo "check_go_test";
+
+	some_failed=0
+	for s in $(go list ./...); 
+		do 
+			if ! go test -failfast -v -p 1 $s; then 
+				echo "NOTOK: Test Case - $s - Failed";
+				some_failed=1;
+			fi;
+		done;
+
+	if [ $some_failed -ne "0" ]; then
+		echo "exiting";
+		exit 1;
+	fi
+}
+
+case "$1" in
+    --about )
+        echo "Checking source code"
+        ;;
+    * )
+        check_go_fmt
+		check_go_test
+		echo "End of Pre Commit Hook"
+        ;;
+esac

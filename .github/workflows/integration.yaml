@@ -1,0 +1,105 @@
+name: Runner - Integration
+on: 
+  push:
+  pull_request:
+
+env: 
+  PGPW : ${{secrets.PSQL_PASSWORD}}
+  PGDB : ${{secrets.PSQL_DATABASENAME}}
+  PGUN :  ${{secrets.PSQL_USERNAME}}
+
+jobs:
+  job1:
+    strategy:
+      matrix:
+        go-version: [1.17.x, 1.18.x]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    services:
+        # Label used to access the service container
+        postgres:
+          # Docker Hub image
+          image: postgres
+          # Provide the password for postgres
+          env:
+            POSTGRES_PASSWORD: ${{env.PGPW}}
+            POSTGRES_DB:  ${{env.PGDB}}
+            POSTGRES_USER: ${{env.PGUN}}
+
+          # Set health checks to wait until postgres has started
+          options: >-
+            --health-cmd pg_isready
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
+          ports:
+            # Maps tcp port 5432 on service container to the host
+            - 5432:5432
+    steps:
+      - uses: actions/setup-go@v3
+        with:
+          go-version: ${{ matrix.go-version }}
+      - name: Checks out this branch
+        uses: actions/checkout@v3
+      - name: Show GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: Prepare configuration from Github Secrets
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "credentials.json"
+          json: '{
+    "jwt" : {
+      "secret" : "${{secrets.jwt_secret}}"
+    },
+    "psql" : {
+      "username":  "${{env.PGUN}}", 
+      "database_name" : "${{env.PGDB}}",
+      "host":  "${{secrets.psql_HOST}}",  
+      "password":   "${{env.PGPW}}",  
+      "port":  "${{secrets.psql_port}}" 
+    },
+    "oAuth" : {
+      "google": {
+          "client_id":  "${{secrets.oAuth_google_clientId}}",
+          "client_secret":  "${{secrets.oAuth_google_clientSecret}}",
+          "project_id":  "${{secrets.oAuth_google_projectId}}",
+          "auth_uri":  "${{secrets.oAuth_google_authUri}}",
+          "token_uri":  "${{secrets.oAuth_google_tokenUri}}",
+          "auth_provider_x509_cert_url":  "${{secrets.oAuth_google_authProviderX509CertUrl}}"
+        }
+    },
+    "network": {
+      "domain":  "${{secrets.network_domain}}", 
+      "port":  "${{secrets.network_port}}"
+    },
+    "session": { 
+      "key":  "${{secrets.session_key}}"
+    },
+    "https": {
+      "paths": {
+        "cert_file_parent_var":  "${{secrets.https_paths_certFileParentVar}}", 
+        "certificate":  "${{secrets.https_paths_certificate}}",
+        "key":  "${{secrets.https_paths_key}}"
+      }
+    }
+  }
+'
+
+      - name: Copy Configuration to intended location, see readme.
+        run: |
+          configpath="$HOME/customkeystore/test"
+          sudo mkdir -p "${configpath}"
+          sudo cp credentials.json "${configpath}/config.json"
+          cat "${configpath}/config.json"
+      - name: run pre commit hook
+        run: ./dev-hooks/git-hooks/pre-commit
+      - name: Compile go to binary (Sanity Check)
+        # the path to the binary should be $GOPATH/bin, we will explicitly point to $HOME/go/bin in case the env path is not set.
+        # Sanity check that the binary exist.
+        run: |
+          echo $GOPATH
+          go install
+          ls $HOME/go/bin
+          ls $HOME/go/bin/gomoon
