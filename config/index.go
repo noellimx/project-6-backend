@@ -19,6 +19,11 @@ type PSQL struct {
 	Password     string `json:"password"`
 }
 
+type Network struct {
+	Domain string `json:"domain"`
+	Port   string `json:"port"`
+}
+
 type GlobalConfig struct {
 	StaticDirectory string `json:"static_directory"`
 	JWT             JWT    `json:"jwt"`
@@ -30,10 +35,7 @@ type GlobalConfig struct {
 		} `json:"google"`
 	} `json:"oAuth"`
 
-	Network struct {
-		Domain string `json:"domain"`
-		Port   string `json:"port"`
-	}
+	Network Network `json:"network"`
 
 	Session struct {
 		Key string `json:"key"`
