@@ -3,11 +3,6 @@ on:
   push:
     branches: 
       - deploy
-      - ci-cd
-
-  pull_request:
-    branches: 
-      - deploy
 jobs:
   deployment:
     strategy:
