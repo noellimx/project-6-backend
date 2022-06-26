@@ -17,6 +17,11 @@ import (
 	"proj6/gomoon/wss"
 )
 
+type BroadcastPayload struct {
+	Event   string
+	Message *database.Message
+}
+
 var connections = []*websocket.Conn{}
 
 var exists = struct{}{}
@@ -139,6 +144,8 @@ func StoreMessageInTickerRoom(message *database.Message, tokenString string) {
 
 	// Store the result
 	fmt.Println("storing message to db")
+	fmt.Println(message)
+
 	database.AddToMessage(message)
 	// And broadcase message to room
 }
@@ -177,12 +184,18 @@ func listenToWsConnection(conn *websocket.Conn) {
 				return
 			}
 
+			var messagePayload BroadcastPayload
+			messagePayload.Event = event
+			messagePayload.Message = message
+			fmt.Println("messagePayload ", messagePayload)
+			messageMarshal, _ := json.Marshal(messagePayload)
+			fmt.Println(string(messageMarshal))
+
 			roomId := messageThatIsStoredInDatabase.RoomTicker
 
 			connArray := myhub.GetConnectionsInRoom(roomId)
-			dummyMessage := "A message to this room " + roomId
 
-			wss.Broadcast(connArray, []byte(dummyMessage))
+			wss.Broadcast(connArray, []byte(messageMarshal))
 
 			//4. only send msg to specific roomId
 			fmt.Println("event for sendToTicker fire")

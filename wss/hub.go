@@ -7,7 +7,10 @@ import (
 )
 
 func Broadcast(connections []*websocket.Conn, p []byte) {
-	fmt.Println("broadcasting to everyone all channel")
+
+	count := fmt.Sprint(len(connections))
+	fmt.Println("broadcasting to " + count + " channel")
+	fmt.Println(p)
 	for _, connection := range connections {
 		connection.WriteMessage(websocket.BinaryMessage, p)
 	}
