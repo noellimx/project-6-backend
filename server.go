@@ -93,7 +93,7 @@ func main() {
 
 	r.Mount("/users", routes.UserRouter())
 
-	r.Mount("/auth", routes.HTTPAuthRouter())
+	r.Mount("/auth", routes.HTTPAuthRouter(globalConfig.Network))
 
 	r.Mount("/ws", routes.UpGradeToWsRouter())
 

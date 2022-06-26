@@ -3,6 +3,7 @@ package routes
 import (
 	"errors"
 	"fmt"
+	"proj6/gomoon/config"
 	"proj6/gomoon/database"
 	"proj6/gomoon/utils"
 
@@ -33,7 +34,7 @@ var routerName = "Router - HTTPAuth"
 var jwtSecret = []byte(utils.RandomString(256))
 var JwtSecret = jwtSecret
 
-func HTTPAuthRouter() http.Handler {
+func HTTPAuthRouter(networkConfig config.Network) http.Handler {
 
 	r := chi.NewRouter()
 
@@ -120,7 +121,7 @@ func HTTPAuthRouter() http.Handler {
 		}
 
 		http.SetCookie(w, cookie)
-		http.Redirect(w, r, "https://localhost:3004", http.StatusMovedPermanently)
+		http.Redirect(w, r, "https://"+networkConfig.Domain+":"+networkConfig.Port, http.StatusMovedPermanently)
 	})
 
 	// option 1: login with google
