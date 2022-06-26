@@ -9,19 +9,21 @@ import (
 )
 
 type JWT struct {
-	Secret string `json:"secret"`
+	Secret string `json:"secret"` // Secret to sign the JWT
 }
 type PSQL struct {
 	Username     string `json:"username"`
 	DatabaseName string `json:"database_name"`
 	Host         string `json:"host"`
 	Port         string `json:"port"`
+	Password     string `json:"password"`
 }
 
 type GlobalConfig struct {
-	JWT   JWT  `json:"jwt"`
-	PSQL  PSQL `json:"psql"`
-	OAuth struct {
+	StaticDirectory string `json:"static_directory"`
+	JWT             JWT    `json:"jwt"`
+	PSQL            PSQL   `json:"psql"`
+	OAuth           struct {
 		Google struct {
 			ClientId     string `json:"client_id"`
 			ClientSecret string `json:"client_secret"`
@@ -39,9 +41,9 @@ type GlobalConfig struct {
 
 	Https struct {
 		Paths struct {
-			CertFileParentVar string `json:"cert_file_parent_var"`
-			Certificate       string `json:"certificate"`
-			Key               string `json:"key"`
+			CertFileParentVar string `json:"cert_file_parent_var"` // The value of this environment variable will be the parent directory
+			Certificate       string `json:"certificate"`          // file name of certificate
+			Key               string `json:"key"`                  // file name of key
 		} `json:"paths"`
 	}
 }

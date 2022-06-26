@@ -21,11 +21,6 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
-var globalConfig = config.ReadConfig(config.Production)
-
-var certFileParentVar = globalConfig.Https.Paths.CertFileParentVar
-var certFilePathFileParent = os.Getenv(certFileParentVar)
-
 func EnvSubPath(env config.Environment) string {
 	var subpath string
 
@@ -41,18 +36,27 @@ func EnvSubPath(env config.Environment) string {
 
 }
 
-var envSubPath = "/" + EnvSubPath(config.Production)
-var certificatePath = certFilePathFileParent + "/customkeystore" + envSubPath + globalConfig.Https.Paths.Certificate
-var keyPath = certFilePathFileParent + "/customkeystore" + envSubPath + globalConfig.Https.Paths.Key
-
 func main() {
 
-	// type Message struct {
-	// 	gorm.Model
-	// 	message string
-	// 	roomId  int
-	// 	time    time.Time
-	// }
+	var globalConfig = config.ReadConfig(config.Production)
+
+	var staticDirectory string
+
+	if globalConfig.StaticDirectory == "" {
+		defaultStaticDirectory := "./static"
+		fmt.Println("static directory not specified in config. default to : " + defaultStaticDirectory)
+		staticDirectory = defaultStaticDirectory
+	} else {
+		staticDirectory = globalConfig.StaticDirectory
+	}
+	fmt.Println("static directory is : " + staticDirectory)
+
+	var certFileParentVar = globalConfig.Https.Paths.CertFileParentVar
+	var certFilePathFileParent = os.Getenv(certFileParentVar)
+
+	var envSubPath = "/" + EnvSubPath(config.Production)
+	var certificatePath = certFilePathFileParent + "/customkeystore" + envSubPath + globalConfig.Https.Paths.Certificate
+	var keyPath = certFilePathFileParent + "/customkeystore" + envSubPath + globalConfig.Https.Paths.Key
 
 	rand.Seed(time.Now().UnixNano())
 
@@ -72,8 +76,9 @@ func main() {
 	r := chi.NewRouter()
 
 	// Welcome Message
-	r.Mount("/", routes.StaticRouter())
+	r.Mount("/", routes.StaticRouter(staticDirectory))
 
+	serverInitTime := time.Now()
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 
 		s, err := r.Cookie("_gothic_session")
@@ -82,7 +87,7 @@ func main() {
 			fmt.Println(s.Value)
 
 		}
-		fmt.Fprint(w, "Hi")
+		fmt.Fprint(w, "Hi: "+serverInitTime.String())
 	})
 	r.Mount("/dummy", routes.DummyRouter())
 
@@ -95,7 +100,7 @@ func main() {
 	r.Mount("/history", routes.MessageRouter())
 
 	func() {
-		fqdn := globalConfig.Network.Domain + ":" + globalConfig.Network.Port
+		fqdn := ":" + globalConfig.Network.Port
 		fmt.Println("Server listening on " + fqdn + "...")
 		if err := http.ListenAndServeTLS(fqdn, certificatePath, keyPath, r); err != nil {
 			log.Fatal(err)
