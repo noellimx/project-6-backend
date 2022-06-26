@@ -108,7 +108,7 @@ func HTTPAuthRouter() http.Handler {
 		dbUser, _ := database.GetByEmailOrCreateUser(user.Email)
 
 		token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-			"username": dbUser.Username,
+			"username": dbUser.Email,
 		})
 
 		jwtStr, _ := token.SignedString(JwtSecret)
@@ -118,11 +118,9 @@ func HTTPAuthRouter() http.Handler {
 			Value: jwtStr,
 			Path:  "/",
 		}
+
 		http.SetCookie(w, cookie)
-
-		fmt.Fprintf(w, user.Email)
-		fmt.Fprintf(w, "")
-
+		http.Redirect(w, r, "https://localhost:3004", http.StatusMovedPermanently)
 	})
 
 	// option 1: login with google
