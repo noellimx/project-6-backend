@@ -108,7 +108,7 @@ func HTTPAuthRouter() http.Handler {
 		dbUser, _ := database.GetByEmailOrCreateUser(user.Email)
 
 		token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-			"username": dbUser.Username,
+			"username": dbUser.Email,
 		})
 
 		jwtStr, _ := token.SignedString(JwtSecret)
