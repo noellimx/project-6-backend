@@ -121,7 +121,7 @@ func HTTPAuthRouter(networkConfig config.Network) http.Handler {
 		}
 
 		http.SetCookie(w, cookie)
-		http.Redirect(w, r, "https://"+networkConfig.Domain+":"+networkConfig.Port+"/index.html", http.StatusMovedPermanently)
+		http.Redirect(w, r, "https://"+networkConfig.Domain+":"+networkConfig.Port+"/main.html", http.StatusMovedPermanently)
 	})
 
 	// option 1: login with google
