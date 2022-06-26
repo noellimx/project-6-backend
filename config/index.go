@@ -20,9 +20,10 @@ type PSQL struct {
 }
 
 type GlobalConfig struct {
-	JWT   JWT  `json:"jwt"`
-	PSQL  PSQL `json:"psql"`
-	OAuth struct {
+	StaticDirectory string `json:"static_directory"`
+	JWT             JWT    `json:"jwt"`
+	PSQL            PSQL   `json:"psql"`
+	OAuth           struct {
 		Google struct {
 			ClientId     string `json:"client_id"`
 			ClientSecret string `json:"client_secret"`

@@ -40,6 +40,17 @@ func main() {
 
 	var globalConfig = config.ReadConfig(config.Production)
 
+	var staticDirectory string
+
+	if globalConfig.StaticDirectory == "" {
+		defaultStaticDirectory := "./static"
+		fmt.Println("static directory not specified in config. default to : " + defaultStaticDirectory)
+		staticDirectory = defaultStaticDirectory
+	} else {
+		staticDirectory = globalConfig.StaticDirectory
+	}
+	fmt.Println("static directory is : " + staticDirectory)
+
 	var certFileParentVar = globalConfig.Https.Paths.CertFileParentVar
 	var certFilePathFileParent = os.Getenv(certFileParentVar)
 
@@ -65,7 +76,7 @@ func main() {
 	r := chi.NewRouter()
 
 	// Welcome Message
-	r.Mount("/", routes.StaticRouter())
+	r.Mount("/", routes.StaticRouter(staticDirectory))
 
 	serverInitTime := time.Now()
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
