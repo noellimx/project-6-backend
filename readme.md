@@ -170,3 +170,5 @@ There is executables that will complete this part.
 [ ] Dockerize everything. Environment should be independent of, and consistent across all platforms.
 
 [ ] There are still some hardcoding of variables involved which may break the pipeline.
+
+[ ] Version Control of application and its dependencies

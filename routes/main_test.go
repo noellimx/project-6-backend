@@ -5,7 +5,7 @@ import (
 )
 
 func TestTickerListHandler(t *testing.T) {
-	t.Skip("Skipping test ticker handler")
+	// t.Skip("Skipping test ticker handler")
 
 	// type tickerListResponseBody struct {
 	// 	Tickers []string

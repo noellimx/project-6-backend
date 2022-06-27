@@ -114,7 +114,7 @@ echo "[Run] Killing existing process on port ${listeningPort}"
 
 sudo fuser -k ${listeningPort}/tcp
 
-${go_binary_dir}/${app_name} &
+nohup ${go_binary_dir}/${app_name} > /dev/null 2>&1
 
 exit 0;
 
