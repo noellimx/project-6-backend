@@ -21,7 +21,8 @@ func AFavourite(email string, username string) *Favourite {
 }
 
 func SetFavourite(favourite *Favourite) {
-
+	fmt.Println("Setting Favourite")
+	fmt.Println(favourite)
 	var favs []Favourite
 
 	Db.Where(favourite).First(&favs)
