@@ -2,10 +2,12 @@ package database
 
 import (
 	"fmt"
-
-	"github.com/jinzhu/gorm"
+	"net/url"
 
 	"proj6/gomoon/config"
+
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 var Db *gorm.DB
@@ -15,13 +17,10 @@ var err error
 func autoMigrate() {
 
 	if Db == nil {
-
 		panic("This method should only be executed after initializing the global db instance")
-
 	}
-	Db.AutoMigrate(&User{})
-	Db.AutoMigrate(&Message{})
-	Db.AutoMigrate(&Favourite{})
+	fmt.Println("Auto-migrating...")
+	Db.AutoMigrate(&User{}, &Message{}, &Favourite{})
 }
 
 func Init(dbConfig *config.PSQL) {
@@ -34,14 +33,27 @@ func Init(dbConfig *config.PSQL) {
 	dbName := dbConfig.DatabaseName
 	password := dbConfig.Password
 
+	dsn := url.URL{
+		User:     url.UserPassword(username, password),
+		Scheme:   "postgres",
+		Host:     fmt.Sprintf("%s:%s", host, port),
+		Path:     dbName,
+		RawQuery: (&url.Values{"sslmode": []string{"disable"}}).Encode(),
+	}
+
+	dsnString := dsn.String()
+
 	if password == "" {
 		fmt.Println("Info: No password is supplied for the database.")
 	} else {
 		fmt.Println("Info: Password is supplied to the database")
-
 	}
 
-	Db, err = gorm.Open("postgres", "host="+host+" port="+port+" user="+username+" password="+password+" dbname="+dbName+" sslmode=disable")
+	connString := "host=" + host + " port=" + port + " user=" + username + " password=" + password + " dbname=" + dbName + " sslmode=disable"
+	_ = connString
+
+	fmt.Println("Connection String to DB : " + dsnString)
+	Db, err = gorm.Open("postgres", dsnString)
 
 	if err != nil {
 
@@ -50,6 +62,7 @@ func Init(dbConfig *config.PSQL) {
 	} else {
 		fmt.Println("dbName: " + dbName)
 	}
+
 	autoMigrate()
 
 }

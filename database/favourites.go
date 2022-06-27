@@ -1,14 +1,16 @@
 package database
 
 import (
+	"fmt"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 type Favourite struct {
 	gorm.Model
-	Email  string `gorm:"unique"`
-	Ticker string `gorm:"unique"`
+	Email  string `gorm:"primaryKey"`
+	Ticker string `gorm:"primaryKey"`
 }
 
 func AFavourite(email string, username string) *Favourite {
@@ -16,6 +18,41 @@ func AFavourite(email string, username string) *Favourite {
 	p.Email = email
 	p.Ticker = username
 	return p
+}
+
+func SetFavourite(favourite *Favourite) {
+
+	var favs []Favourite
+
+	Db.Where(favourite).First(&favs)
+
+	if len(favs) == 0 {
+		Db.Create(favourite)
+	}
+}
+
+func RemoveFavourite(favourite *Favourite) {
+
+	var favs []Favourite
+
+	Db.Where(favourite).First(&favs)
+	if len(favs) != 0 {
+
+		fmt.Println("RemoveFavourite")
+		fmt.Println(favs)
+		Db.Delete(favs[0])
+	}
+
+}
+func GetFavouritesOfEmail(email string) *[]Favourite {
+	var favs []Favourite
+	targetFav := Favourite{}
+	targetFav.Email = email
+
+	Db.Find(&favs, targetFav)
+
+	return &favs
+
 }
 
 // func GetByEmailOrCreateUser(email string) (newOrExistingUser *User, isNew bool) {
