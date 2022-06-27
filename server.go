@@ -99,6 +99,8 @@ func main() {
 
 	r.Mount("/history", routes.MessageRouter())
 
+	r.Mount("/ticker", routes.TickerRouter())
+
 	func() {
 		fqdn := ":" + globalConfig.Network.Port
 		fmt.Println("Server listening on " + fqdn + "...")

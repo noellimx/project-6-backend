@@ -75,7 +75,7 @@ func GetSearchValue(w http.ResponseWriter, r *http.Request) {
 }
 func TickerRouter() http.Handler {
 	r := chi.NewRouter()
-	r.Get("/ticker/getallticker/{val}", GetSearchValue)
+	r.Get("/getallticker/{val}", GetSearchValue)
 
 	return r
 }
