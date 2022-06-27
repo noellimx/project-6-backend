@@ -1,10 +1,9 @@
 #!/bin/bash
 
 
-# This script is runnable 
 
 # NOTE:
-# There is no support for environment variables. By right, the values should be taken from the configuration file.
+# There is no support for environment variables. 
 # Functional on EC2, Ubuntu 22
 
 gh_repo_url=https://github.com/noellimx/project-6-backend.git
@@ -114,7 +113,8 @@ echo "[Run] Killing existing process on port ${listeningPort}"
 
 sudo fuser -k ${listeningPort}/tcp
 
-nohup ${go_binary_dir}/${app_name} > /dev/null 2>&1
+nohup ${go_binary_dir}/${app_name} &
 
+echo "End of Deployment Script"
 exit 0;
 
