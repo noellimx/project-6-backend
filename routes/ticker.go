@@ -64,9 +64,13 @@ func GetSearchValue(w http.ResponseWriter, r *http.Request) {
 	param := chi.URLParam(r, "val")
 
 	// TODO
-	result, _ := SearchTickers(param)
+	results, _ := SearchTickers(param)
 
-	json.NewEncoder(w).Encode(result)
+	json.NewEncoder(w).Encode(&struct {
+		results *TickerSearchResponses
+	}{
+		results: results,
+	})
 
 }
 func TickerRouter() http.Handler {
