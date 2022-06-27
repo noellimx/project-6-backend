@@ -17,7 +17,7 @@ func TestGetTickers(t *testing.T) {
 
 	}
 
-	wantCount := 29
+	wantCount := 2
 	gotCount := len(*tickerResults)
 	if gotCount != wantCount {
 		t.Fatal("Error getting results. Third party should return " + fmt.Sprint(wantCount) + "values." + "Got " + fmt.Sprint(gotCount))
