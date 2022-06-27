@@ -113,7 +113,7 @@ echo "[Run] Killing existing process on port ${listeningPort}"
 
 sudo fuser -k ${listeningPort}/tcp
 
-nohup ${go_binary_dir}/${app_name} &
+${go_binary_dir}/${app_name} &
 
 echo "End of Deployment Script"
 exit 0;
