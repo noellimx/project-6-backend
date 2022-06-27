@@ -101,6 +101,8 @@ func main() {
 
 	r.Mount("/ticker", routes.TickerRouter())
 
+	r.Mount("/favourite", routes.FavouritesRouter())
+
 	func() {
 		fqdn := ":" + globalConfig.Network.Port
 		fmt.Println("Server listening on " + fqdn + "...")
