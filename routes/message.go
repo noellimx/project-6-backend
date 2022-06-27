@@ -10,10 +10,8 @@ import (
 )
 
 func getAllMessage(w http.ResponseWriter, r *http.Request) {
-	enableCors := func(w *http.ResponseWriter) {
-		(*w).Header().Set("Access-Control-Allow-Origin", "*")
-	}
-	enableCors(&w)
+
+	EnableCors(&w)
 	allMessages := database.FindMessagesInDB()
 
 	json.NewEncoder(w).Encode(&allMessages)
@@ -21,10 +19,8 @@ func getAllMessage(w http.ResponseWriter, r *http.Request) {
 }
 
 func getMessageFromTicker(w http.ResponseWriter, r *http.Request) {
-	enableCors := func(w *http.ResponseWriter) {
-		(*w).Header().Set("Access-Control-Allow-Origin", "*")
-	}
-	enableCors(&w)
+
+	EnableCors(&w)
 	myTicker := chi.URLParam(r, "ticker")
 	fmt.Println(myTicker)
 	allMessages := database.FindMessagesByTicker(myTicker)
