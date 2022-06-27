@@ -13,7 +13,7 @@ func TestCreateAndGetOneMessage(t *testing.T) {
 	timee := time.Now()
 	ticker := "ticker" + utils.RandomString(12)
 
-	AddToMessage(ticker, testMessage, username, timee)
+	AddToMessageFromValues(ticker, testMessage, username, timee)
 
 	newMessage := FindMessageByUsernameTime(username, timee)
 
@@ -55,11 +55,11 @@ func TestGetMessagesByTickers(t *testing.T) {
 		ticker := tickers[i%2]
 		timee := time.Now()
 
-		AddToMessage(ticker, testMessage, username, timee)
+		AddToMessageFromValues(ticker, testMessage, username, timee)
 
 	}
 
-	AddToMessage(ticker2, "feeder message", username, time.Now())
+	AddToMessageFromValues(ticker2, "feeder message", username, time.Now())
 
 	allTicker1Messages := FindMessagesByTicker(ticker1)
 	allTicker2Messages := FindMessagesByTicker(ticker2)

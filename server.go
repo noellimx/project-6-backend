@@ -40,6 +40,17 @@ func main() {
 
 	var globalConfig = config.ReadConfig(config.Production)
 
+	var staticDirectory string
+
+	if globalConfig.StaticDirectory == "" {
+		defaultStaticDirectory := "./static"
+		fmt.Println("static directory not specified in config. default to : " + defaultStaticDirectory)
+		staticDirectory = defaultStaticDirectory
+	} else {
+		staticDirectory = globalConfig.StaticDirectory
+	}
+	fmt.Println("static directory is : " + staticDirectory)
+
 	var certFileParentVar = globalConfig.Https.Paths.CertFileParentVar
 	var certFilePathFileParent = os.Getenv(certFileParentVar)
 
@@ -65,28 +76,31 @@ func main() {
 	r := chi.NewRouter()
 
 	// Welcome Message
-	r.Mount("/", routes.StaticRouter())
+	r.Mount("/", routes.StaticRouter(staticDirectory))
 
+	serverInitTime := time.Now()
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 
 		s, err := r.Cookie("_gothic_session")
-
+		fmt.Println("accessing / route")
 		if err == nil {
 			fmt.Println(s.Value)
 
 		}
-		fmt.Fprint(w, "Hi")
+		fmt.Fprint(w, "Hi: "+serverInitTime.String())
 	})
 	r.Mount("/dummy", routes.DummyRouter())
 
 	r.Mount("/users", routes.UserRouter())
 
-	r.Mount("/auth", routes.HTTPAuthRouter())
+	r.Mount("/auth", routes.HTTPAuthRouter(globalConfig.Network))
 
 	r.Mount("/ws", routes.UpGradeToWsRouter())
 
+	r.Mount("/history", routes.MessageRouter())
+
 	func() {
-		fqdn := globalConfig.Network.Domain + ":" + globalConfig.Network.Port
+		fqdn := ":" + globalConfig.Network.Port
 		fmt.Println("Server listening on " + fqdn + "...")
 		if err := http.ListenAndServeTLS(fqdn, certificatePath, keyPath, r); err != nil {
 			log.Fatal(err)

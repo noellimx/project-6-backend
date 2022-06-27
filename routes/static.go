@@ -6,9 +6,10 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func StaticRouter() http.Handler {
+func StaticRouter(staticDirectory string) http.Handler {
 	r := chi.NewRouter()
-	fileServer := http.FileServer(http.Dir("./static"))
+
+	fileServer := http.FileServer(http.Dir(staticDirectory)) // desktop/static, but i want <repo>/static
 	r.Handle("/*", fileServer)
 
 	return r
