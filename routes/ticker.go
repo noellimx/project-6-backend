@@ -67,9 +67,9 @@ func GetSearchValue(w http.ResponseWriter, r *http.Request) {
 	results, _ := SearchTickers(param)
 
 	json.NewEncoder(w).Encode(&struct {
-		results *TickerSearchResponses
+		results TickerSearchResponses
 	}{
-		results: results,
+		results: *results,
 	})
 
 }
