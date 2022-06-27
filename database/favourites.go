@@ -1,25 +1,22 @@
 package database
 
-// import (
-// 	"proj6/gomoon/types"
-// 	"proj6/gomoon/utils"
+import (
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
+)
 
-// 	"github.com/jinzhu/gorm"
-// 	_ "github.com/jinzhu/gorm/dialects/postgres"
-// )
+type Favourite struct {
+	gorm.Model
+	Email  string `gorm:"unique"`
+	Ticker string `gorm:"unique"`
+}
 
-// type Favourites struct {
-// 	gorm.Model
-// 	Email  string `gorm:"unique"`
-// 	Ticker string `gorm:"unique"`
-// }
-
-// func AFavourite(email string, username string) *types.User {
-// 	p := &types.User{}
-// 	p.Email = email
-// 	p.Username = username
-// 	return p
-// }
+func AFavourite(email string, username string) *Favourite {
+	p := &Favourite{}
+	p.Email = email
+	p.Ticker = username
+	return p
+}
 
 // func GetByEmailOrCreateUser(email string) (newOrExistingUser *User, isNew bool) {
 

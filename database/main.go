@@ -21,7 +21,7 @@ func autoMigrate() {
 	}
 	Db.AutoMigrate(&User{})
 	Db.AutoMigrate(&Message{})
-
+	Db.AutoMigrate(&Favourite{})
 }
 
 func Init(dbConfig *config.PSQL) {
