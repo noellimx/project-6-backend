@@ -68,7 +68,9 @@ func main() {
 	gothic.GetProviderName = routes.CustomGetProviderNameFromRequestWithChiFramework
 
 	googleAuthCredentials := globalConfig.OAuth.Google
+
 	googleCallbackUrl := "https://" + globalConfig.Network.Domain + ":" + globalConfig.Network.Port + "/auth/google/callback"
+	fmt.Println("googleCallbackUrl: " + googleCallbackUrl)
 	goth.UseProviders(google.New(googleAuthCredentials.ClientId, googleAuthCredentials.ClientSecret, googleCallbackUrl))
 
 	routes.JwtSecret = []byte(globalConfig.JWT.Secret)
