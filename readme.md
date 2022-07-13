@@ -58,7 +58,6 @@ or any of your choice, just specify in `config.json`.
 
 `$ createdb <database_name>`
 
-
 Database service should be ready for connection prior to running the application.
 
 ##### Generate HTTPS TLS Certificate
@@ -75,7 +74,7 @@ Obtain a public certificate signed by public CA. Its free, more secure than self
 
 `sudo apt install certbot` install certbot
 
-
+Please check certbot docs on binding your hostname or ip address in a new certificate.
 
 # 3. Download Repository and Test Source Code
 
@@ -126,9 +125,11 @@ Secret variables will be set as configuration values for the gh environment via 
 
 #### Mapping of names from config.json to github secrets
 
-config.json key : Nesting = `.`, Multi-word separator: `_`, case: sensitive
-
-=> github secret name : Nesting = `_`, Multi-word separator: none, case: all uppercase
+| Syntax | config.json | github secret name |
+| ------------- | ------------- | --------- |
+| Nesting | `.` | `_` |
+| Multi-word Separator | `_` | none |
+| Case | Sensitive | Non-sensitive | 
 
 Example: config.db.my_secret => CONFIG_MYSECRET
 
@@ -161,7 +162,7 @@ There is executables that will complete this part.
 
 ## EC2 Attributes in Github Secrets
 
-`SSH_KEY` key, in .pem to ssh in to EC2 server.
+`SSH_KEY` key, in .pem to ssh in to EC2 server.\
 `EC2_IP` EC2 server ip. (please note to use a lasting, static ip)
 
 
