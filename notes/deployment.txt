@@ -1,1 +1,0 @@
-https://medium.com/innovation-incubator/deploying-code-from-github-to-aws-ec2-with-codepipeline-4639e8fbba28
