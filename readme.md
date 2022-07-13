@@ -1,6 +1,4 @@
-# Development
-
-# RTFM
+# Development Notes
 
 # package name
 
@@ -157,15 +155,14 @@ https://github.com/appleboy/ssh-action/issues/80#issuecomment-1130407377
 
 Will be done in github workflow.
 
-There is executables that will complete this part.
-1. `./dev-hooks/deployment-hooks/deployec2gomoonbe.sh` The deployment script injected by runner and to be executed in the remote EC2 server.
+Executable that will complete this part:
+
+`./dev-hooks/deployment-hooks/deployec2gomoonbe.sh` The deployment script injected by runner to be executed in the remote EC2 server.
 
 ## EC2 Attributes in Github Secrets
 
 `SSH_KEY` key, in .pem to ssh in to EC2 server.\
 `EC2_IP` EC2 server ip. (please note to use a lasting, static ip)
-
-
 
 # TODO
 [ ] Dockerize everything. Environment should be independent of, and consistent across all platforms.
