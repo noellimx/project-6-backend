@@ -4,6 +4,16 @@
 
 gomoon
 
+# Project Reference
+
+[Frontend Repository](github.com/noellimx/project-6-front-end)
+
+## Tech Stack
+![Tech Stack](docs/techstack.png)
+
+## CI/CD
+![CICD](docs/cicd.png)
+
 # App Prerequisites
 
 - go
