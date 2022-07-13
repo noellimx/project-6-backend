@@ -1,10 +1,18 @@
-# Development
-
-# RTFM
+# Development Notes
 
 # package name
 
 gomoon
+
+# Project Reference
+
+[Frontend Repository](github.com/noellimx/project-6-front-end)
+
+## Tech Stack
+![Tech Stack](docs/techstack.png)
+
+## CI/CD
+![CICD](docs/cicd.png)
 
 # App Prerequisites
 
@@ -18,13 +26,11 @@ Each environment (EC2, local, Github Runner etc) should have its own test and pr
 
 # 1. Install [prerequisites](#app-prerequisites)
 
-
 ## 1.1 Go
 Development will use golang and its utilities.
 
 ## 1.2 postgresql
-For database service.
-
+For native database service.
 
 # 2. One time setup for new environment
 
@@ -32,7 +38,7 @@ For database service.
 
 No reading of variables from environment for now. All configurations (paths, variables to credentials, external services etc) should be stored in a json file `config.json`.
 
-### Path
+### Path to `config.json`
 
 Path to this file is `$HOME/customkeystore/< "test" | "production" >/config.json` and will be parsed as a global configuration in the program. The config is confidential and MUST NOT be commited into repository.
 
@@ -58,7 +64,6 @@ or any of your choice, just specify in `config.json`.
 
 `$ createdb <database_name>`
 
-
 Database service should be ready for connection prior to running the application.
 
 ##### Generate HTTPS TLS Certificate
@@ -75,7 +80,7 @@ Obtain a public certificate signed by public CA. Its free, more secure than self
 
 `sudo apt install certbot` install certbot
 
-
+Please check certbot docs on binding your hostname or ip address in a new certificate.
 
 # 3. Download Repository and Test Source Code
 
@@ -126,9 +131,11 @@ Secret variables will be set as configuration values for the gh environment via 
 
 #### Mapping of names from config.json to github secrets
 
-config.json key : Nesting = `.`, Multi-word separator: `_`, case: sensitive
-
-=> github secret name : Nesting = `_`, Multi-word separator: none, case: all uppercase
+| Syntax | config.json | github secret name |
+| ------------- | ------------- | --------- |
+| Nesting | `.` | `_` |
+| Multi-word Separator | `_` | none |
+| Case | Sensitive | Non-sensitive | 
 
 Example: config.db.my_secret => CONFIG_MYSECRET
 
@@ -156,15 +163,14 @@ https://github.com/appleboy/ssh-action/issues/80#issuecomment-1130407377
 
 Will be done in github workflow.
 
-There is executables that will complete this part.
-1. `./dev-hooks/deployment-hooks/deployec2gomoonbe.sh` The deployment script injected by runner and to be executed in the remote EC2 server.
+Executable that will complete this part:
+
+`./dev-hooks/deployment-hooks/deployec2gomoonbe.sh` The deployment script injected by runner to be executed in the remote EC2 server.
 
 ## EC2 Attributes in Github Secrets
 
-`SSH_KEY` key, in .pem to ssh in to EC2 server.
+`SSH_KEY` key, in .pem to ssh in to EC2 server.\
 `EC2_IP` EC2 server ip. (please note to use a lasting, static ip)
-
-
 
 # TODO
 [ ] Dockerize everything. Environment should be independent of, and consistent across all platforms.
