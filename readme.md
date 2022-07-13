@@ -16,13 +16,11 @@ Each environment (EC2, local, Github Runner etc) should have its own test and pr
 
 # 1. Install [prerequisites](#app-prerequisites)
 
-
 ## 1.1 Go
 Development will use golang and its utilities.
 
 ## 1.2 postgresql
-For database service.
-
+For native database service.
 
 # 2. One time setup for new environment
 
@@ -30,7 +28,7 @@ For database service.
 
 No reading of variables from environment for now. All configurations (paths, variables to credentials, external services etc) should be stored in a json file `config.json`.
 
-### Path
+### Path to `config.json`
 
 Path to this file is `$HOME/customkeystore/< "test" | "production" >/config.json` and will be parsed as a global configuration in the program. The config is confidential and MUST NOT be commited into repository.
 
