@@ -38,7 +38,7 @@ func NewHub() *hub {
 	return s
 }
 
-// 1. Subscribe connection to room. If connection is subscriber, it drops the subscription
+// 1. Subscribe connection to room. If connection is subscriber, it drops the existing subscription
 // 2. if the target room has nil collection, construct new empty collection
 // 3. Subscribe.
 func (s *hub) AddConnectionToRoom(roomIdToSubscribe string, conn *websocket.Conn) {
@@ -129,33 +129,8 @@ func StoreMessageInTickerRoom(message *database.Message, tokenString string) {
 		fmt.Println("Error authenticating for database activity")
 		return
 	}
-
 	// storing data
-
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	// // do something with decoded claims
-	// for key, val := range claims {
-	// }
-	// // from token need to get username
-
-	// Store the result
-	fmt.Println("storing message to db")
-	fmt.Println(message)
-
 	database.AddToMessage(message)
-	// And broadcase message to room
-}
-
-func ChatHistory(result *map[string]interface{}) {
-	thisResult := *result
-	roomId := (thisResult)["roomId"]
-	ticker := roomId
-	fmt.Println("chatHistory func, ticker", ticker)
-
 }
 
 // listen indefinitely for new messages coming
